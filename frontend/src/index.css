@@ -12,3 +12,8 @@
 body {
   @apply m-3 bg-gray-900;
 }
+
+input,
+textarea {
+  @apply bg-gray-900 outline-none;
+}
