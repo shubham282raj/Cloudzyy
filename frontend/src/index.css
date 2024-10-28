@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  scroll-behavior: smooth;
+  @apply mx-auto my-0 border-gray-500 text-white;
+}
+
+body {
+  @apply m-3 bg-gray-900;
+}
