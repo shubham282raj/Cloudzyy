@@ -30,7 +30,14 @@ export default function Navbar() {
 
   return (
     <div className="mb-5 flex h-16 items-center justify-between rounded-lg bg-gray-800 px-5">
-      <div className="m-0">Logo</div>
+      <div className="m-0 flex items-center gap-3 text-lg font-bold tracking-widest">
+        <img
+          src="favicon.svg"
+          alt="logo"
+          className="inline-block scale-[1.5]"
+        />
+        Cloudzyy
+      </div>
       <div className="m-0 flex items-center gap-3">
         {links.map((link, index) => {
           return (

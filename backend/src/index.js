@@ -24,6 +24,10 @@ app.use(
 
 app.use(customLogging);
 
+app.get("/", async (req, res) => {
+  res.status(200).send("Hello There");
+});
+
 app.use("/api", router);
 
 const PORT = process.env.PORT || 7000;
