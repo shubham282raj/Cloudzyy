@@ -21,6 +21,35 @@ export const getContent = async (path) => {
   return responseBody;
 };
 
+export const getContentBuffer = async (data) => {
+  const response = await fetch(
+    `${API_BASE_URL}/api/github/download?path=${data.path}`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to download file");
+  }
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = data.name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+
+  return 1;
+};
+
 export const deleteContent = async (data) => {
   const response = await fetch(`${API_BASE_URL}/api/github/delete`, {
     method: "DELETE",

@@ -1,17 +1,17 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
-import { loginUser } from "../api/user";
+import { registerUser } from "../api/user";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Register() {
   const queryClient = useQueryClient();
 
   const { register, handleSubmit } = useForm();
 
   const navigate = useNavigate();
 
-  const mutation = useMutation(loginUser, {
+  const mutation = useMutation(registerUser, {
     onSuccess() {
       navigate("/browse");
       queryClient.invalidateQueries("validateToken");
@@ -33,13 +33,37 @@ export default function Login() {
           onSubmit={onSubmit}
         >
           <div className="text-center text-lg font-bold tracking-widest underline">
-            Login
+            Register
           </div>
+          <input
+            type="text"
+            className="rounded-lg px-4 py-2"
+            placeholder="Name"
+            {...register("name")}
+          />
           <input
             type="text"
             className="rounded-lg px-4 py-2"
             placeholder="Email"
             {...register("email")}
+          />
+          <input
+            type="text"
+            className="rounded-lg px-4 py-2"
+            placeholder="GitHub Repo Name"
+            {...register("githubRepo")}
+          />
+          <input
+            type="text"
+            className="rounded-lg px-4 py-2"
+            placeholder="GitHub Repo Owner"
+            {...register("githubRepoOwner")}
+          />
+          <input
+            type="text"
+            className="rounded-lg px-4 py-2"
+            placeholder="GitHub Repo Token"
+            {...register("githubToken")}
           />
           <input
             type="password"

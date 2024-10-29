@@ -17,23 +17,19 @@ export const getContent = async (user, path) => {
     auth: user.githubToken,
   });
 
-  try {
-    const response = await octokit.request(
-      "GET /repos/{owner}/{repo}/contents/{path}",
-      {
-        owner: user.githubRepoOwner,
-        repo: user.githubRepo,
-        path: path,
-        headers: {
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
-      }
-    );
-    return response;
-  } catch (error) {
-    console.error("Failed to fetch content:", error);
-    throw error;
-  }
+  const response = await octokit.request(
+    "GET /repos/{owner}/{repo}/contents/{path}",
+    {
+      owner: user.githubRepoOwner,
+      repo: user.githubRepo,
+      path: path,
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    }
+  );
+
+  return response;
 };
 
 export const deleteContent = async (user, data) => {

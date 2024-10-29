@@ -4,14 +4,17 @@ import { getContent } from "../api/github";
 import FileFolder from "../components/FileFolder";
 import Menu from "../components/Menu";
 import DragAndDrop from "../components/DragAndDrop";
+import { useAppContext } from "../Context/AppContext";
 
 export default function Browse() {
+  const { isLoggedIn } = useAppContext();
+
   const [path, setPath] = useState("");
 
   const [selected, setSelected] = useState([]);
   const [subMenu, setSubMenu] = useState(-1);
 
-  const [showUpload, setShowUpload] = useState(true);
+  const [showUpload, setShowUpload] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryFn: () => getContent(path || ""),
@@ -26,6 +29,7 @@ export default function Browse() {
     },
   });
 
+  if (!isLoggedIn) return <p>Unauthorized</p>;
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -65,7 +69,12 @@ export default function Browse() {
                 <div className="aspect-square w-1 rounded-full bg-white"></div>
                 <div className="aspect-square w-1 rounded-full bg-white"></div>
                 {subMenu == 0 && (
-                  <Menu data={selected} setSubMenu={setSubMenu} path={path} />
+                  <Menu
+                    data={selected}
+                    setSubMenu={setSubMenu}
+                    path={path}
+                    options={["Delete"]}
+                  />
                 )}
               </button>
             </div>
