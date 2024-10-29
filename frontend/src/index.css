@@ -6,7 +6,7 @@
   box-sizing: border-box;
   padding: 0;
   scroll-behavior: smooth;
-  @apply mx-auto my-0 border-gray-500 text-white;
+  @apply mx-0 my-0 border-gray-500 text-white;
 }
 
 body {

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export default function Navbar() {
   const links = [
     { name: "Home", url: "" },
+    { name: "Browse", url: "browse" },
     { name: "Login", url: "login" },
   ];
 
