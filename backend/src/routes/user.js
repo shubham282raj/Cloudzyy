@@ -60,6 +60,12 @@ user.post(
       .notEmpty()
       .withMessage("GitHub Repository is required"),
 
+    body("githubRepoOwner")
+      .isString()
+      .withMessage("GitHub Repository Owner must be a string")
+      .notEmpty()
+      .withMessage("GitHub Repository Owner is required"),
+
     body("githubToken")
       .isString()
       .withMessage("GitHub Token must be a string")
