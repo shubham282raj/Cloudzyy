@@ -12,9 +12,9 @@ export default function Menu({ data, path, setSubMenu }) {
     {
       name: "Delete",
       mutation: useMutation({
-        mutationKey: `Delete-${data.sha}`,
-        mutationFn: () => {
-          deleteContent(data.path, data.sha);
+        mutationKey: `Delete-${data[0].html_url}`,
+        mutationFn: () => deleteContent(data),
+        onSuccess: () => {
           queryClient.refetchQueries(`content-${path}`);
         },
       }),

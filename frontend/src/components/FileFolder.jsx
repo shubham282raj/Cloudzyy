@@ -10,27 +10,26 @@ export default function FileFolder({
   subMenu,
   setSubMenu,
 }) {
-  const thisSelected = selected.some((item) => item.sha === data.sha);
+  const thisSelected = selected.some((item) => item.html_url === data.html_url);
 
   return (
     <div
       className={
-        "flex h-52 w-40 cursor-pointer flex-col justify-between gap-2 rounded-lg border-2 bg-gray-800 px-3 py-5 " +
+        "flex h-52 cursor-pointer flex-col justify-between gap-2 rounded-lg border-2 bg-gray-800 px-3 py-5 " +
         (thisSelected ? "" : "border-gray-800")
       }
       onClick={() => {
         if (data.type == "file") {
           setSelected((prevSelected) => {
-            // Check if the selected item already exists in the list by its `path` or `sha`
             const isSelected = prevSelected.some(
-              (item) => item.sha === data.sha,
+              (item) => item.html_url === data.html_url,
             );
 
             if (isSelected) {
-              // If it exists, remove it
-              return prevSelected.filter((item) => !(item.sha === data.sha));
+              return prevSelected.filter(
+                (item) => !(item.html_url === data.html_url),
+              );
             } else {
-              // If it doesn't exist, add it to the list
               return [...prevSelected, data];
             }
           });
@@ -45,14 +44,16 @@ export default function FileFolder({
             className="relative flex aspect-square h-7 flex-col items-center justify-evenly rounded-full hover:bg-gray-900"
             onClick={(e) => {
               e.stopPropagation();
-              setSubMenu((menu) => (menu == data.sha ? -1 : data.sha));
+              setSubMenu((menu) =>
+                menu == data.html_url ? -1 : data.html_url,
+              );
             }}
           >
             <div className="aspect-square w-1 rounded-full bg-white"></div>
             <div className="aspect-square w-1 rounded-full bg-white"></div>
             <div className="aspect-square w-1 rounded-full bg-white"></div>
-            {subMenu == data.sha && (
-              <Menu data={data} setSubMenu={setSubMenu} path={path} />
+            {subMenu == data.html_url && (
+              <Menu data={[data]} setSubMenu={setSubMenu} path={path} />
             )}
           </button>
         ) : (
