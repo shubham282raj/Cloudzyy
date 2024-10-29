@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { getContent } from "../api/github";
 import FileFolder from "../components/FileFolder";
+import Menu from "../components/Menu";
 
 export default function Browse() {
   const [path, setPath] = useState("");
 
   const [selected, setSelected] = useState([]);
+  const [subMenu, setSubMenu] = useState(-1);
 
   const { data, isLoading, error } = useQuery({
     queryFn: () => getContent(path || ""),
@@ -45,12 +47,18 @@ export default function Browse() {
           </div>
         </div>
         {selected.length != 0 && (
-          <div className="flex">
+          <div className="flex gap-2">
             <div>{selected.length} Selected</div>
-            <button className="flex aspect-square h-6 flex-col justify-evenly">
-              <div className="ml-auto mr-1.5 aspect-square w-1 rounded-full bg-white"></div>
-              <div className="ml-auto mr-1.5 aspect-square w-1 rounded-full bg-white"></div>
-              <div className="ml-auto mr-1.5 aspect-square w-1 rounded-full bg-white"></div>
+            <button
+              className="relative flex aspect-square h-6 flex-col items-center justify-evenly rounded-full hover:bg-gray-900"
+              onClick={() => {
+                setSubMenu((menu) => (menu == 0 ? -1 : 0));
+              }}
+            >
+              <div className="aspect-square w-1 rounded-full bg-white"></div>
+              <div className="aspect-square w-1 rounded-full bg-white"></div>
+              <div className="aspect-square w-1 rounded-full bg-white"></div>
+              {subMenu == 0 && <Menu />}
             </button>
           </div>
         )}
@@ -63,6 +71,8 @@ export default function Browse() {
             selected={selected}
             setSelected={setSelected}
             setPath={setPath}
+            subMenu={subMenu}
+            setSubMenu={setSubMenu}
           />
         ))}
       </div>

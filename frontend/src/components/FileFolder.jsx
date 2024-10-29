@@ -1,43 +1,57 @@
 import React, { useState } from "react";
+import Menu from "./Menu";
 
-export default function FileFolder({ data, selected, setSelected, setPath }) {
-  const thisSelected = selected.includes(data.html_url);
+export default function FileFolder({
+  data,
+  selected,
+  setSelected,
+  setPath,
+  subMenu,
+  setSubMenu,
+}) {
+  const thisSelected = selected.some((item) => item.sha === data.sha);
 
   return (
     <div
       className={
-        "flex h-44 w-40 cursor-pointer flex-col justify-between gap-2 rounded-lg bg-gray-800 px-3 py-5 " +
-        (thisSelected ? "border-2" : "")
+        "flex h-52 w-40 cursor-pointer flex-col justify-between gap-2 rounded-lg border-2 bg-gray-800 px-3 py-5 " +
+        (thisSelected ? "" : "border-gray-800")
       }
       onClick={() => {
         if (data.type == "file") {
+          setSelected((prevSelected) => {
+            // Check if the selected item already exists in the list by its `path` or `sha`
+            const isSelected = prevSelected.some(
+              (item) => item.sha === data.sha,
+            );
+
+            if (isSelected) {
+              // If it exists, remove it
+              return prevSelected.filter((item) => !(item.sha === data.sha));
+            } else {
+              // If it doesn't exist, add it to the list
+              return [...prevSelected, { sha: data.sha, path: data.path }];
+            }
+          });
         } else {
           setPath(data.path);
         }
       }}
     >
-      <div className="flex justify-between">
+      <div className="flex justify-end">
         {data.type == "file" ? (
-          <>
-            <button
-              className="aspect-square h-6 rounded-full border-4"
-              style={{ borderColor: thisSelected ? "white" : "#6b7280" }}
-              onClick={() => {
-                setSelected((prevSelected) => {
-                  if (prevSelected.includes(data.html_url)) {
-                    return prevSelected.filter((url) => url !== data.html_url);
-                  } else {
-                    return [...prevSelected, data.html_url];
-                  }
-                });
-              }}
-            ></button>
-            <button className="flex aspect-square h-6 flex-col justify-evenly">
-              <div className="ml-auto mr-1.5 aspect-square w-1 rounded-full bg-white"></div>
-              <div className="ml-auto mr-1.5 aspect-square w-1 rounded-full bg-white"></div>
-              <div className="ml-auto mr-1.5 aspect-square w-1 rounded-full bg-white"></div>
-            </button>
-          </>
+          <button
+            className="relative flex aspect-square h-7 flex-col items-center justify-evenly rounded-full hover:bg-gray-900"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSubMenu((menu) => (menu == data.sha ? -1 : data.sha));
+            }}
+          >
+            <div className="aspect-square w-1 rounded-full bg-white"></div>
+            <div className="aspect-square w-1 rounded-full bg-white"></div>
+            <div className="aspect-square w-1 rounded-full bg-white"></div>
+            {subMenu == data.sha && <Menu />}
+          </button>
         ) : (
           <div></div>
         )}
