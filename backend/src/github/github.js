@@ -23,3 +23,25 @@ export const getContent = async (user, path) => {
     throw error;
   }
 };
+
+export const deleteContent = async (user, path, sha) => {
+  const octokit = new Octokit({
+    auth: user.githubToken,
+  });
+
+  const response = await octokit.request(
+    "DELETE /repos/{owner}/{repo}/contents/{path}",
+    {
+      owner: user.githubRepoOwner,
+      repo: user.githubRepo,
+      path: path,
+      message: `Deleting File: ${path}`,
+      sha: sha,
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    }
+  );
+
+  return response;
+};

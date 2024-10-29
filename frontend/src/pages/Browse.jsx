@@ -70,6 +70,7 @@ export default function Browse() {
             data={value}
             selected={selected}
             setSelected={setSelected}
+            path={path}
             setPath={setPath}
             subMenu={subMenu}
             setSubMenu={setSubMenu}

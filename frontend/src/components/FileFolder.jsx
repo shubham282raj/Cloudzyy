@@ -5,6 +5,7 @@ export default function FileFolder({
   data,
   selected,
   setSelected,
+  path,
   setPath,
   subMenu,
   setSubMenu,
@@ -30,7 +31,7 @@ export default function FileFolder({
               return prevSelected.filter((item) => !(item.sha === data.sha));
             } else {
               // If it doesn't exist, add it to the list
-              return [...prevSelected, { sha: data.sha, path: data.path }];
+              return [...prevSelected, data];
             }
           });
         } else {
@@ -50,7 +51,9 @@ export default function FileFolder({
             <div className="aspect-square w-1 rounded-full bg-white"></div>
             <div className="aspect-square w-1 rounded-full bg-white"></div>
             <div className="aspect-square w-1 rounded-full bg-white"></div>
-            {subMenu == data.sha && <Menu />}
+            {subMenu == data.sha && (
+              <Menu data={data} setSubMenu={setSubMenu} path={path} />
+            )}
           </button>
         ) : (
           <div></div>

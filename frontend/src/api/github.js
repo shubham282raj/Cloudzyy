@@ -21,3 +21,27 @@ export const getContent = async (path) => {
   console.log(responseBody.content);
   return responseBody.content;
 };
+
+export const deleteContent = async (path, sha) => {
+  console.log("called");
+  const response = await fetch(`${API_BASE_URL}/api/github/delete`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      path,
+      sha,
+    }),
+  });
+
+  const responseBody = await response.json();
+
+  if (!response.ok) {
+    throw new Error(responseBody);
+  }
+
+  console.log(responseBody);
+  return responseBody;
+};
