@@ -47,6 +47,14 @@ export default function Login() {
             placeholder="Password"
             {...register("password")}
           />
+          <label className="mx-auto flex gap-2 text-gray-400">
+            <input
+              type="checkbox"
+              className="outline-none"
+              {...register("rememberMe")}
+            />
+            Remember me
+          </label>
           <button
             type="submit"
             className="mx-auto w-24 rounded-lg border-t border-slate-700 p-1.5 shadow-md shadow-slate-950"

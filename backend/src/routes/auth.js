@@ -29,7 +29,7 @@ auth.post(
   ],
   customValidate,
   async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
     try {
       const user = await User.findOne({ email: email });
       if (!user) {
@@ -42,14 +42,14 @@ auth.post(
       }
 
       const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, {
-        expiresIn: "1d",
+        expiresIn: rememberMe ? "30d" : "1h",
       });
 
       res.cookie("auth_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-        maxAge: 86400000,
+        maxAge: rememberMe ? 30 * 86400000 : 3600000,
       });
 
       res.status(200).send({ userId: user._id });

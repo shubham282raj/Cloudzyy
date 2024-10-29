@@ -40,12 +40,7 @@ export default function Navbar() {
           );
         })}
         {isLoggedIn && (
-          <button
-            onClick={() => mutation.mutate()}
-            className="rounded-lg border-2 px-2 py-1"
-          >
-            Sign Out
-          </button>
+          <button onClick={() => mutation.mutate()}>Sign Out</button>
         )}
       </div>
     </div>

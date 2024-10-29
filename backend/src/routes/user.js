@@ -88,14 +88,14 @@ user.post(
       await user.save();
 
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
-        expiresIn: "1d",
+        expiresIn: "1h",
       });
 
       res.cookie("auth_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-        maxAge: 86400000,
+        maxAge: 3600000,
       });
 
       res.status(200).send({ message: "User registered successfully" });
