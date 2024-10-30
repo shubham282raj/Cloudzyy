@@ -44,11 +44,7 @@ export default function Browse() {
               setPath((path) => path.substring(0, path.lastIndexOf("/")));
             }}
           >
-            <img
-              src="icons/uparrow.svg"
-              alt="go_back"
-              className="h-3/4 invert"
-            />
+            <img src="icons/uparrow.svg" alt="go_back" className="h-3/4" />
           </button>
           <div className="flex gap-2">
             <div className="font-bold">Current Path:</div>
@@ -73,7 +69,7 @@ export default function Browse() {
                     data={selected}
                     setSubMenu={setSubMenu}
                     path={path}
-                    options={["Delete"]}
+                    options={["Delete", "Download"]}
                   />
                 )}
               </button>
@@ -81,12 +77,12 @@ export default function Browse() {
           )}
 
           <button onClick={() => setShowUpload((v) => !v)}>
-            <img src="/icons/addFile.svg" alt="addFile" className="invert" />
+            <img src="/icons/addFile.svg" alt="addFile" className="" />
           </button>
         </div>
       </div>
       {showUpload && <DragAndDrop setShowUpload={setShowUpload} path={path} />}
-      <div className="my-3 grid grid-cols-3 gap-3">
+      <div className="my-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {data.content.data.map((value, index) => (
           <FileFolder
             key={`file-folder-${value.html_url}`}

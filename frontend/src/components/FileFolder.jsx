@@ -64,9 +64,9 @@ export default function FileFolder({
         <img
           src={data.type == "file" ? "icons/file.svg" : "icons/folder.svg"}
           alt=""
-          className="w-12 invert"
+          className="w-14"
         />
-        <div>{data.name}</div>
+        <div className="line-clamp-1 w-full break-words">{data.name}</div>
       </div>
     </div>
   );

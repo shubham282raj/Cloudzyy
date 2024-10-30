@@ -31,10 +31,16 @@ github.get("/content", verifyToken, getUser, async (req, res) => {
 
 github.get("/download", verifyToken, getUser, async (req, res) => {
   try {
-    const response = await getContent(req.user, req.query.path);
-    const fileBuffer = Buffer.from(response.data.content, "base64");
+    const downloadDetails = [];
+    for (const path of JSON.parse(req.query.path)) {
+      const response = await getContent(req.user, path);
+      downloadDetails.push({
+        url: response.data.download_url,
+        name: response.data.name,
+      });
+    }
 
-    return res.status(200).send(fileBuffer);
+    return res.status(200).send({ downloadDetails });
   } catch (error) {
     console.error("Error fetching content:", error);
     return res

@@ -15,7 +15,7 @@ export default function Menu({
       name: "Download",
       mutation: useMutation({
         mutationKey: `Download-${data[0].html_url}`,
-        mutationFn: () => getContentBuffer(data[0]),
+        mutationFn: () => getContentBuffer(data),
       }),
     },
     {
@@ -31,21 +31,22 @@ export default function Menu({
   ];
 
   return (
-    <div className="absolute right-0 top-7 z-10 rounded-lg border bg-gray-500 px-3 py-1">
+    <div className="absolute right-0 top-7 z-10 flex flex-col gap-1 rounded-lg border bg-gray-600 px-3 py-1">
       {menuOptions
         .filter((menuOpt) => options.includes(menuOpt.name))
         .map((menuOpt) => {
           return (
-            <button
+            <div
               key={`menu-${menuOpt.name}`}
               onClick={(e) => {
                 e.stopPropagation();
                 menuOpt.mutation.mutate();
                 setSubMenu(-1);
               }}
+              className="cursor-pointer"
             >
               {menuOpt.name}
-            </button>
+            </div>
           );
         })}
     </div>

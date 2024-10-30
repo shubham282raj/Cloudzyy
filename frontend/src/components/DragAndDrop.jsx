@@ -66,7 +66,7 @@ const DragAndDrop = ({ setShowUpload, path }) => {
                   <img
                     src="/icons/file.svg"
                     alt={`file-${file.name}`}
-                    className="invert"
+                    className=""
                   />
                   <div className="line-clamp-1 flex-grow">{file.name}</div>
                   <div className="w-fit flex-shrink-0">
@@ -81,11 +81,12 @@ const DragAndDrop = ({ setShowUpload, path }) => {
                         ),
                       );
                     }}
+                    className="flex-shrink-0"
                   >
                     <img
                       src="icons/cross.svg"
                       alt="individual-cross"
-                      className="invert"
+                      className=""
                     />
                   </button>
                 </div>
@@ -101,21 +102,21 @@ const DragAndDrop = ({ setShowUpload, path }) => {
           )}
         </div>
       </div>
-      <div className="ml-1 flex flex-col justify-evenly rounded-lg bg-gray-800">
+      <div className="ml-1 flex flex-shrink-0 flex-col justify-evenly rounded-lg bg-gray-800">
         <button
           onClick={() => {
             setFiles([]);
             setShowUpload(false);
           }}
         >
-          <img src="/icons/cross.svg" alt="cross" className="invert" />
+          <img src="/icons/cross.svg" alt="cross" className="" />
         </button>
         <button
           onClick={handleUpload}
           disabled={mutation.isLoading || files.length == 0}
           className="disabled:opacity-40"
         >
-          <img src="/icons/tick.svg" alt="upload" className="invert" />
+          <img src="/icons/tick.svg" alt="upload" className="" />
         </button>
       </div>
     </div>
