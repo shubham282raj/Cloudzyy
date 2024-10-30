@@ -69,7 +69,9 @@ const DragAndDrop = ({ setShowUpload, path }) => {
                     alt={`file-${file.name}`}
                     className=""
                   />
-                  <div className="line-clamp-1 flex-grow">{file.name}</div>
+                  <div className="line-clamp-1 flex-grow break-all">
+                    {file.name}
+                  </div>
                   <div className="w-fit flex-shrink-0">
                     {(file.size / 1048576).toFixed(2)} MBs
                   </div>
@@ -108,7 +110,7 @@ const DragAndDrop = ({ setShowUpload, path }) => {
           </div>
         </div>
       </div>
-      <div className="ml-1 flex flex-shrink-0 flex-col items-center justify-evenly rounded-lg bg-gray-800">
+      <div className="ml-1 flex flex-shrink-0 flex-col items-center justify-evenly rounded-lg bg-gray-800 px-0.5">
         <button
           onClick={() => {
             setFiles([]);
