@@ -15,7 +15,7 @@ export default function FileFolder({
   return (
     <div
       className={
-        "flex h-52 cursor-pointer flex-col justify-between gap-2 rounded-lg border-2 bg-gray-800 px-3 py-5 " +
+        "flex h-52 cursor-pointer flex-col justify-between gap-2 rounded-lg border-2 bg-gray-900 px-3 py-5 transition-colors hover:bg-gray-800 " +
         (thisSelected ? "" : "border-gray-800")
       }
       onClick={() => {
@@ -34,6 +34,7 @@ export default function FileFolder({
             }
           });
         } else {
+          setSelected([]);
           setPath(data.path);
         }
       }}
@@ -41,7 +42,7 @@ export default function FileFolder({
       <div className="flex justify-end">
         {data.type == "file" ? (
           <button
-            className="relative flex aspect-square h-7 flex-col items-center justify-evenly rounded-full hover:bg-gray-900"
+            className="relative flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
             onClick={(e) => {
               e.stopPropagation();
               setSubMenu((menu) =>
@@ -66,7 +67,9 @@ export default function FileFolder({
           alt=""
           className="w-14"
         />
-        <div className="line-clamp-1 w-full break-words">{data.name}</div>
+        <div className="line-clamp-1 w-full break-words text-center">
+          {data.name}
+        </div>
       </div>
     </div>
   );

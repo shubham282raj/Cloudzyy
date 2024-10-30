@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useMutation, useQueryClient } from "react-query";
 import { postContent } from "../api/github";
+import { CircularLoader2 } from "./Loader";
 
 const DragAndDrop = ({ setShowUpload, path }) => {
   const [files, setFiles] = useState([]);
@@ -54,8 +55,8 @@ const DragAndDrop = ({ setShowUpload, path }) => {
         <div
           {...getRootProps()}
           className={
-            "rounded-lg border-2 border-dashed border-gray-500 px-2 py-10 text-center " +
-            (isDragActive ? "bg-gray-600" : "bg-gray-800")
+            "rounded-lg border-2 border-dashed border-gray-700 px-2 py-10 text-center transition-colors " +
+            (isDragActive ? "bg-gray-700" : "bg-gray-800")
           }
         >
           <input {...getInputProps()} />
@@ -93,16 +94,21 @@ const DragAndDrop = ({ setShowUpload, path }) => {
               ))}
             </div>
           )}
-          {isDragActive ? (
-            <p>Drop the files here...</p>
-          ) : (
-            files.length == 0 && (
-              <p>Drag and drop files here, or click to select files</p>
-            )
+          {files.length != 0 && (
+            <div className="my-10 border-t-2 border-dashed"></div>
           )}
+          <div className="mx-auto w-fit rounded-lg px-2 py-1">
+            {isDragActive ? (
+              <p>Drop the files here...</p>
+            ) : files.length == 0 ? (
+              <p>Drag and drop files here, or click to select files</p>
+            ) : (
+              <p>Add more</p>
+            )}
+          </div>
         </div>
       </div>
-      <div className="ml-1 flex flex-shrink-0 flex-col justify-evenly rounded-lg bg-gray-800">
+      <div className="ml-1 flex flex-shrink-0 flex-col items-center justify-evenly rounded-lg bg-gray-800">
         <button
           onClick={() => {
             setFiles([]);
@@ -116,7 +122,11 @@ const DragAndDrop = ({ setShowUpload, path }) => {
           disabled={mutation.isLoading || files.length == 0}
           className="disabled:opacity-40"
         >
-          <img src="/icons/tick.svg" alt="upload" className="" />
+          {mutation.isLoading ? (
+            <CircularLoader2 />
+          ) : (
+            <img src="/icons/tick.svg" alt="upload" className="" />
+          )}
         </button>
       </div>
     </div>

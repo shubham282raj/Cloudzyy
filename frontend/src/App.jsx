@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Browse from "./pages/Browse";
 import Register from "./pages/Resigter";
+import { ScreenLoader } from "./components/Loader";
 
 function App() {
   return (

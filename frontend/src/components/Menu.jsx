@@ -1,6 +1,7 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { deleteContent, getContentBuffer } from "../api/github";
+import { useAppContext } from "../Context/AppContext";
 
 export default function Menu({
   data,
@@ -10,12 +11,17 @@ export default function Menu({
 }) {
   const queryClient = useQueryClient();
 
+  const { setScreenLdr, showToast } = useAppContext();
+
   const menuOptions = [
     {
       name: "Download",
       mutation: useMutation({
         mutationKey: `Download-${data[0].html_url}`,
         mutationFn: () => getContentBuffer(data),
+        onSettled: () => setScreenLdr(false),
+        onSuccess: () => showToast("Download Started"),
+        onError: () => showToast("Download Failed"),
       }),
     },
     {
@@ -25,7 +31,10 @@ export default function Menu({
         mutationFn: () => deleteContent(data),
         onSuccess: () => {
           queryClient.refetchQueries(`content-${path}`);
+          showToast("Deleted");
         },
+        onSettled: () => setScreenLdr(false),
+        onError: () => showToast("Error Deleting"),
       }),
     },
   ];
@@ -40,6 +49,7 @@ export default function Menu({
               key={`menu-${menuOpt.name}`}
               onClick={(e) => {
                 e.stopPropagation();
+                setScreenLdr(true);
                 menuOpt.mutation.mutate();
                 setSubMenu(-1);
               }}

@@ -10,7 +10,7 @@
 }
 
 body {
-  @apply m-3 bg-gray-900;
+  @apply relative min-h-screen w-screen bg-gray-900 p-3;
 }
 
 input,

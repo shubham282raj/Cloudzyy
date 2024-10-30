@@ -27,13 +27,16 @@ const Toast = ({ message, type, onClose }) => {
     };
   }, [onClose]);
 
-  const styles =
-    type === "SUCCESS"
-      ? "fixed top-16 xl:top-20 right-4 z-50 p-4 rounded-md bg-green-600 text-white max-w-md select-none "
-      : "fixed top-16 xl:top-20 right-4 z-50 p-4 rounded-md bg-red-600 text-white max-w-md select-none";
-
   return (
-    <div className={styles + " overflow-hidden"} onClick={onClose}>
+    <div
+      className={
+        (type === "SUCCESS"
+          ? "fixed bottom-4 right-4 z-50 max-w-md select-none rounded-md bg-gray-800 p-4"
+          : "fixed bottom-4 right-4 z-50 max-w-md select-none rounded-md bg-gray-800 p-4") +
+        " overflow-hidden"
+      }
+      onClick={onClose}
+    >
       <div className="flex items-center justify-center">
         <span className="text-lg font-semibold">{String(message)}</span>
       </div>

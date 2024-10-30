@@ -5,6 +5,7 @@ import FileFolder from "../components/FileFolder";
 import Menu from "../components/Menu";
 import DragAndDrop from "../components/DragAndDrop";
 import { useAppContext } from "../Context/AppContext";
+import { ScreenLoader } from "../components/Loader";
 
 export default function Browse() {
   const { isLoggedIn } = useAppContext();
@@ -30,7 +31,7 @@ export default function Browse() {
   });
 
   if (!isLoggedIn) return <p>Unauthorized</p>;
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <ScreenLoader />;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
@@ -41,13 +42,14 @@ export default function Browse() {
             className="mr-2 flex aspect-square items-center justify-center rounded-lg border bg-slate-900 disabled:bg-slate-800 disabled:opacity-50"
             disabled={path == ""}
             onClick={() => {
+              setSelected([]);
               setPath((path) => path.substring(0, path.lastIndexOf("/")));
             }}
           >
             <img src="icons/uparrow.svg" alt="go_back" className="h-3/4" />
           </button>
           <div className="flex gap-2">
-            <div className="font-bold">Current Path:</div>
+            <div className="font-semibold">Current Path:</div>
             <div>{path == "" ? "Root" : path}</div>
           </div>
         </div>
@@ -96,7 +98,6 @@ export default function Browse() {
           />
         ))}
       </div>
-      {/* <div>{JSON.stringify(selected)}</div> */}
     </div>
   );
 }
