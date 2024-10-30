@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Browse from "./pages/Browse";
 import Register from "./pages/Resigter";
 import { ScreenLoader } from "./components/Loader";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/browse" element={<Browse />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
     </>

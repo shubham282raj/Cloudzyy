@@ -10,11 +10,10 @@ export default function Navbar() {
 
   const links = isLoggedIn
     ? [
-        { name: "Home", url: "" },
+        { name: "Profile", url: "profile" },
         { name: "Browse", url: "browse" },
       ]
     : [
-        { name: "Home", url: "" },
         { name: "Register", url: "register" },
         { name: "Login", url: "login" },
       ];

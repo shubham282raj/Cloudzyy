@@ -90,3 +90,17 @@ export const postContent = async (user, files, githubPath) => {
 
   return reponses;
 };
+
+export const getRateLimit = async (user) => {
+  const octokit = new Octokit({
+    auth: user.githubToken,
+  });
+
+  const response = await octokit.request("GET /rate_limit", {
+    headers: {
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  });
+
+  return response;
+};

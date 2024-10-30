@@ -122,3 +122,16 @@ export const postContent = async ({ files, uploadPath }) => {
   console.log(responseBody);
   return responseBody;
 };
+
+export const getRateLimit = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/github/rateLimit`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error(await response.json());
+  }
+
+  return await response.json();
+};

@@ -4,6 +4,7 @@ import { getUser } from "../middleware/user.js";
 import {
   deleteContent,
   getContent,
+  getRateLimit,
   postContent,
   uploadMulter,
 } from "../github/github.js";
@@ -55,7 +56,7 @@ github.delete("/delete", verifyToken, getUser, async (req, res) => {
     return res.status(200).send(response);
   } catch (error) {
     console.log("Error", error);
-    return res.status(500).send(response);
+    return res.status(500).json({ message: "Failed to delete" });
   }
 });
 
@@ -76,5 +77,15 @@ github.post(
     }
   }
 );
+
+github.get("/rateLimit", verifyToken, getUser, async (req, res) => {
+  try {
+    const response = await getRateLimit(req.user);
+    return res.status(200).json(response.data);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Failed to get rate limit" });
+  }
+});
 
 export default github;
