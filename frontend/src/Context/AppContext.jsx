@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import Toast from "../components/Toast";
 import { validateAuthToken } from "../api/user";
 import { ScreenLoader } from "../components/Loader";
+import FileProperties from "../components/FileProperties";
 
 const AppContext = createContext(undefined);
 
@@ -14,12 +15,15 @@ export const AppContextProvider = ({ children }) => {
 
   const [screenLdr, setScreenLdr] = useState(false);
 
+  const [fileProp, showFileProp] = useState(undefined);
+
   return (
     <AppContext.Provider
       value={{
         isLoggedIn: isSuccess,
         showToast: (message, type = "SUCCESS") => setToast({ message, type }),
         setScreenLdr: setScreenLdr,
+        showFileProp: showFileProp,
       }}
     >
       {children}
@@ -30,7 +34,12 @@ export const AppContextProvider = ({ children }) => {
           onClose={() => setToast(undefined)}
         />
       )}
+
       {screenLdr && <ScreenLoader />}
+
+      {fileProp && (
+        <FileProperties fileProp={fileProp} showFileProp={showFileProp} />
+      )}
     </AppContext.Provider>
   );
 };

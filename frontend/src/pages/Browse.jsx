@@ -41,6 +41,7 @@ export default function Browse() {
           <button
             className="mr-2 flex aspect-square items-center justify-center rounded-lg border bg-slate-900 disabled:bg-slate-800 disabled:opacity-50"
             disabled={path == ""}
+            title="Go Back"
             onClick={() => {
               setSelected([]);
               setPath((path) => path.substring(0, path.lastIndexOf("/")));
@@ -77,8 +78,7 @@ export default function Browse() {
               </button>
             </div>
           )}
-
-          <button onClick={() => setShowUpload((v) => !v)}>
+          <button title="Add File" onClick={() => setShowUpload((v) => !v)}>
             <img src="/icons/addFile.svg" alt="addFile" className="" />
           </button>
         </div>

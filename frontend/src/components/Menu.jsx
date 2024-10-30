@@ -7,11 +7,11 @@ export default function Menu({
   data,
   path,
   setSubMenu,
-  options = ["Download", "Delete"],
+  options = ["Download", "Delete", "Details"],
 }) {
   const queryClient = useQueryClient();
 
-  const { setScreenLdr, showToast } = useAppContext();
+  const { setScreenLdr, showToast, showFileProp } = useAppContext();
 
   const menuOptions = [
     {
@@ -35,6 +35,14 @@ export default function Menu({
         },
         onSettled: () => setScreenLdr(false),
         onError: () => showToast("Error Deleting"),
+      }),
+    },
+    {
+      name: "Details",
+      mutation: useMutation({
+        mutationKey: `Detail-${data[0].path}`,
+        mutationFn: () => showFileProp(data[0]),
+        onSettled: () => setScreenLdr(false),
       }),
     },
   ];
