@@ -45,8 +45,8 @@ const DragAndDrop = ({ setShowUpload, path }) => {
   return (
     <div className="my-3 flex">
       <div className="flex-grow">
-        <div className="flex flex-shrink-0 justify-center gap-1">
-          <div className="mb-1 flex items-center rounded-lg bg-gray-800 px-3">
+        <div className="flex justify-center gap-1">
+          <div className="flex- mb-1 items-center break-all rounded-lg bg-gray-800 px-3">
             {path == "" ? "Root" : path} /
           </div>
           <input

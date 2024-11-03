@@ -41,10 +41,10 @@ export default function Browse() {
 
   return (
     <div>
-      <div className="mb-3 flex justify-between rounded-lg bg-gray-800 px-3 py-2">
-        <div className="flex">
+      <div className="mb-3 flex justify-between gap-2 rounded-lg bg-gray-800 px-3 py-2">
+        <div className="flex flex-grow">
           <button
-            className="mr-2 flex aspect-square items-center justify-center rounded-lg border bg-slate-900 disabled:bg-slate-800 disabled:opacity-50"
+            className="mr-2 flex aspect-square flex-shrink-0 flex-grow-0 items-center justify-center rounded-lg border bg-slate-900 disabled:bg-slate-800 disabled:opacity-50"
             disabled={path == ""}
             title="Go Back"
             onClick={() => {
@@ -54,12 +54,14 @@ export default function Browse() {
           >
             <img src="icons/uparrow.svg" alt="go_back" className="h-3/4" />
           </button>
-          <div className="flex gap-2">
-            <div className="font-semibold">Current Path:</div>
-            <div>{path == "" ? "Root" : path}</div>
+          <div className="flex gap-2" title={path == "" ? "Root" : path}>
+            <div className="flex-shrink-0 font-semibold">Current Path:</div>
+            <div className="line-clamp-1 flex-shrink flex-grow-0 break-all">
+              {path == "" ? "Root" : path}
+            </div>
           </div>
         </div>
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex flex-shrink-0 items-center justify-center gap-3">
           {selected.length != 0 && (
             <div className="flex gap-2">
               <div>{selected.length} Selected</div>
@@ -84,7 +86,10 @@ export default function Browse() {
             </div>
           )}
 
-          <button title="Add File" onClick={() => setShowHidden((v) => !v)}>
+          <button
+            title="Show/Hide Hidden Files"
+            onClick={() => setShowHidden((v) => !v)}
+          >
             {showHidden ? (
               <img src="/icons/openEye.svg" alt="addFile" className="" />
             ) : (

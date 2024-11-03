@@ -24,7 +24,7 @@ export default function FileProperties({ fileProp, showFileProp }) {
   };
 
   return (
-    <div className="absolute left-1/2 top-1/2 z-10 flex h-full w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center overflow-y-auto bg-black bg-opacity-20 px-3 backdrop-blur-md">
+    <div className="fixed left-1/2 top-0 z-10 flex h-screen w-full -translate-x-1/2 flex-col items-center justify-center overflow-y-auto bg-black bg-opacity-20 px-3 backdrop-blur-md">
       <div className="max-w-screen-md">
         <div className="flex items-center justify-between">
           <h1 className="my-2 px-2 font-bold">Image Object Details</h1>
@@ -54,7 +54,10 @@ export default function FileProperties({ fileProp, showFileProp }) {
                       <td className="break-words px-2 py-1.5 font-semibold">
                         {key.split("_").join(" ")}
                       </td>
-                      <td className="line-clamp-2 break-all px-2 py-1.5">
+                      <td
+                        className="line-clamp-2 break-all px-2 py-1.5"
+                        title={value}
+                      >
                         {isValidUrl(value) ? (
                           <a
                             className="cursor-pointer break-all hover:underline"

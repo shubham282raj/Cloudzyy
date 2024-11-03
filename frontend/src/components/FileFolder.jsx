@@ -18,6 +18,7 @@ export default function FileFolder({
         "flex h-52 cursor-pointer flex-col justify-between gap-2 rounded-lg border-2 bg-gray-900 px-3 py-5 transition-colors hover:bg-gray-800 " +
         (thisSelected ? "" : "border-gray-800")
       }
+      title={data.name}
       onClick={() => {
         if (data.type == "file") {
           setSelected((prevSelected) => {
