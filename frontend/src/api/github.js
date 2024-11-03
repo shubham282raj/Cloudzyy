@@ -100,8 +100,26 @@ export const getContentBuffer = async (data) => {
         const blobs = [];
         let downloadedChunks = 0;
 
+        const hiddenFolder = await getContent(
+          `${path.substring(0, path.lastIndexOf("/"))}/hiddenChunks-${downloadDetail.name.split(".chunkdata")[0]}`,
+        );
+        const totalFileSize = hiddenFolder.reduce(
+          (acc, item) => acc + item.size,
+          0,
+        );
+        let totalFileSizeText;
+        if (totalFileSize >= 1024 * 1024 * 1024) {
+          // Convert to GB if size is 1000 MB or more
+          totalFileSizeText =
+            (totalFileSize / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+        } else {
+          // Otherwise, convert to MB
+          totalFileSizeText =
+            (totalFileSize / (1024 * 1024)).toFixed(2) + " MB";
+        }
+
         document.getElementById("circularLoader2").innerText =
-          `Downloading File ${fileNum}/${pathArr.length} Chunk ${1}/${totalChunks}`;
+          `Downloading ${totalFileSizeText} File ${fileNum}/${pathArr.length} Chunk ${1}/${totalChunks}`;
 
         // Download chunks in groups of 3
         for (let i = 0; i < totalChunks; i += 3) {
@@ -120,7 +138,7 @@ export const getContentBuffer = async (data) => {
                 .then((blob) => {
                   downloadedChunks++;
                   document.getElementById("circularLoader2").innerText =
-                    `Downloading File ${fileNum}/${pathArr.length} Chunk ${downloadedChunks + 1}/${totalChunks}`;
+                    `Downloading ${totalFileSizeText} File ${fileNum}/${pathArr.length} Chunk ${downloadedChunks + 1}/${totalChunks}`;
                   return blob;
                 });
             }
