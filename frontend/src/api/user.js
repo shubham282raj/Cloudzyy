@@ -46,10 +46,22 @@ export const validateAuthToken = async () => {
   return response.json();
 };
 
-export const logOut = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+export const getUser = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
     credentials: "include",
-    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to get User");
+  }
+
+  const userData = await response.json();
+  return userData;
+};
+
+export const logOut = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
+    credentials: "include",
   });
 
   if (!response.ok) {

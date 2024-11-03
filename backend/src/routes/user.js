@@ -18,7 +18,7 @@ user.get("/profile", verifyToken, async (req, res) => {
       return res.status(404).send({ message: "Forced Logout: User Not Found" });
     }
 
-    return res.status(200).send({ user });
+    return res.status(200).send(user);
   } catch (error) {
     console.log(error);
     return res.status(500).send({

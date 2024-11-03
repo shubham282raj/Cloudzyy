@@ -1,49 +1,55 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+import { getUser } from "./user";
 
-export const getContent = async (path) => {
-  const response = await fetch(
-    `${API_BASE_URL}/api/github/content?path=${path}`,
-    {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
+const getMemoUser = async () => {
+  let user = JSON.parse(localStorage.getItem("user"));
 
-  const responseBody = await response.json();
-
-  if (!response.ok) {
-    throw new Error(responseBody.message);
+  if (!user) {
+    user = await getUser();
+    localStorage.setItem("user", JSON.stringify(user));
   }
 
-  return responseBody;
+  return user;
+};
+
+export const getContent = async (path) => {
+  const user = await getMemoUser();
+
+  const url = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${path}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `token ${user.githubToken}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        Accept: "application/vnd.github.v3+json",
+      },
+      cache: "reload",
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `GitHub API request failed with status ${response.status}`,
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching content:", error);
+  }
 };
 
 export const getContentBuffer = async (data) => {
   const pathArr = data.map((obj) => obj.path);
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/github/download?path=${JSON.stringify(pathArr)}`,
-    {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
+  for (const path of pathArr) {
+    const response = await getContent(path);
+    const downloadDetail = {
+      url: response.download_url,
+      name: response.name,
+    };
 
-  if (!response.ok) {
-    throw new Error("Failed to download file");
-  }
-
-  const responseBody = await response.json();
-
-  console.log(responseBody.downloadDetails);
-
-  for (const downloadDetail of responseBody.downloadDetails) {
     const isImage =
       /\.(jpg|jpeg|png|gif|bmp|svg|webp|tiff|ico|jfif)(\?.*)?$/i.test(
         downloadDetail.url,
@@ -81,57 +87,117 @@ export const getContentBuffer = async (data) => {
 };
 
 export const deleteContent = async (data) => {
-  const response = await fetch(`${API_BASE_URL}/api/github/delete`, {
-    method: "DELETE",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ data }),
-  });
+  const user = await getMemoUser();
 
-  const responseBody = await response.json();
+  const responses = [];
 
-  if (!response.ok) {
-    throw new Error(responseBody);
+  for (const dat of data) {
+    const url = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${dat.path}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `token ${user.githubToken}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+          Accept: "application/vnd.github.v3+json",
+        },
+        body: JSON.stringify({
+          message: `Deleting File: ${dat.path}`,
+          sha: dat.sha,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `GitHub API request failed with status ${response.status}`,
+        );
+      }
+
+      const responseData = await response.json();
+      responses.push(responseData);
+    } catch (error) {
+      console.error(`Error deleting content at path ${dat.path}:`, error);
+      throw error;
+    }
   }
 
-  return responseBody;
+  return responses;
 };
 
-export const postContent = async ({ files, uploadPath }) => {
-  console.log(uploadPath);
-  if (uploadPath == undefined) uploadPath = "";
+export const postContent = async ({ files, uploadPath = "" }) => {
+  const user = await getMemoUser();
+  const responses = [];
 
-  const formData = new FormData();
-  files.forEach((file) => formData.append("files", file));
-  formData.append("path", uploadPath);
+  for (const file of files) {
+    try {
+      const base64Content = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(",")[1]); // Remove the DataURL prefix
+        reader.onerror = (error) => reject(error);
+      });
 
-  const response = await fetch(`${API_BASE_URL}/api/github/post`, {
-    method: "POST",
-    credentials: "include",
-    body: formData,
-  });
+      const url = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${uploadPath ? uploadPath + "/" : ""}${file.name}`;
 
-  const responseBody = await response.json();
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          Authorization: `token ${user.githubToken}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+          Accept: "application/vnd.github.v3+json",
+        },
+        body: JSON.stringify({
+          message: `Adding file: ${file.name}`,
+          content: base64Content,
+        }),
+      });
 
-  if (!response.ok) {
-    throw new Error(responseBody);
+      const responseBody = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          responseBody.message || `Failed to upload ${file.name}`,
+        );
+      }
+
+      responses.push(responseBody);
+    } catch (error) {
+      console.error(`Error uploading file ${file.name}:`, error);
+      throw error;
+    }
   }
 
-  console.log(responseBody);
-  return responseBody;
+  console.log(responses);
+  return responses;
 };
 
 export const getRateLimit = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/github/rateLimit`, {
-    method: "GET",
-    credentials: "include",
-  });
+  const user = await getMemoUser();
 
-  if (!response.ok) {
-    throw new Error(await response.json());
+  const url = `https://api.github.com/rate_limit`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `token ${user.githubToken}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        Accept: "application/vnd.github.v3+json",
+      },
+    });
+
+    const responseBody = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        responseBody.message || "Failed to get rate limit information",
+      );
+    }
+
+    return responseBody;
+  } catch (error) {
+    console.error("Error fetching rate limit:", error);
+    throw error;
   }
-
-  return await response.json();
 };

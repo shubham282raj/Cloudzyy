@@ -18,15 +18,18 @@ export default function Browse() {
   const [showUpload, setShowUpload] = useState(false);
 
   const { data, isLoading, error } = useQuery({
-    queryFn: () => getContent(path || ""),
+    queryFn: async () => getContent(path || ""),
     queryKey: `content-${path}`,
     onSuccess: (data) => {
+      console.log(data);
       setSelected([]);
-      if (data.message == "Forced Root") setPath("");
-      data.content.data.sort((a, b) => {
+      data.sort((a, b) => {
         if (a.type === b.type) return 0;
         return a.type === "file" ? 1 : -1;
       });
+    },
+    onError: () => {
+      setPath("");
     },
   });
 
@@ -85,7 +88,7 @@ export default function Browse() {
       </div>
       {showUpload && <DragAndDrop setShowUpload={setShowUpload} path={path} />}
       <div className="my-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-        {data.content.data.map((value, index) => (
+        {data.map((value, index) => (
           <FileFolder
             key={`file-folder-${value.html_url}`}
             data={value}
