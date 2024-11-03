@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Menu from "./Menu";
 
 export default function FileFolder({
@@ -61,6 +61,7 @@ export default function FileFolder({
           <div></div>
         )}
       </div>
+
       <div className="flex flex-col items-center">
         <img
           src={data.type == "file" ? "icons/file.svg" : "icons/folder.svg"}

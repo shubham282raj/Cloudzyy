@@ -88,18 +88,22 @@ export default function Browse() {
       </div>
       {showUpload && <DragAndDrop setShowUpload={setShowUpload} path={path} />}
       <div className="my-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-        {data.map((value, index) => (
-          <FileFolder
-            key={`file-folder-${value.html_url}`}
-            data={value}
-            selected={selected}
-            setSelected={setSelected}
-            path={path}
-            setPath={setPath}
-            subMenu={subMenu}
-            setSubMenu={setSubMenu}
-          />
-        ))}
+        {data.map((value, index) =>
+          String(value.name).startsWith("hiddenChunks-") ? (
+            <></>
+          ) : (
+            <FileFolder
+              key={`file-folder-${value.html_url}`}
+              data={value}
+              selected={selected}
+              setSelected={setSelected}
+              path={path}
+              setPath={setPath}
+              subMenu={subMenu}
+              setSubMenu={setSubMenu}
+            />
+          ),
+        )}
       </div>
     </div>
   );
