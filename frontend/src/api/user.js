@@ -1,3 +1,5 @@
+import { setCookie } from "./github";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export const registerUser = async (formData) => {
@@ -60,8 +62,10 @@ export const getUser = async () => {
 };
 
 export const logOut = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
+  setCookie("user", "", 0);
+  const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
     credentials: "include",
+    method: "POST",
   });
 
   if (!response.ok) {

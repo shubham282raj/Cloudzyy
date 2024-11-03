@@ -9,10 +9,7 @@ export default function Navbar() {
   const queryClient = useQueryClient();
 
   const links = isLoggedIn
-    ? [
-        { name: "Profile", url: "profile" },
-        { name: "Browse", url: "browse" },
-      ]
+    ? [{ name: "Profile", url: "profile" }]
     : [
         { name: "Register", url: "register" },
         { name: "Login", url: "login" },

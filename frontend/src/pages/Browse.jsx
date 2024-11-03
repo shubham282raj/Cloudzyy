@@ -35,7 +35,13 @@ export default function Browse() {
     },
   });
 
-  if (!isLoggedIn) return <p>Unauthorized</p>;
+  if (!isLoggedIn)
+    return (
+      <div className="mx-auto flex flex-col items-center justify-center">
+        <div className="mx-auto text-center">Unauthorized</div>
+        <div className="mx-auto text-center">Sign In or Register</div>
+      </div>
+    );
   if (isLoading) return <ScreenLoader />;
   if (error) return <p>Error: {error.message}</p>;
 

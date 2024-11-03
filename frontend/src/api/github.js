@@ -13,7 +13,11 @@ const getMemoUser = async () => {
 };
 
 // Helper functions to get and set cookies
-function setCookie(name, value, minutes) {
+export function setCookie(name, value, minutes) {
+  // Expire the cookie first to make sure it’s fully cleared
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+
+  // Set the new cookie
   const expires = new Date(Date.now() + minutes * 60000).toUTCString();
   document.cookie = `${name}=${value}; expires=${expires}; path=/`;
 }

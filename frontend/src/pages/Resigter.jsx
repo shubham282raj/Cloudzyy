@@ -13,7 +13,7 @@ export default function Register() {
 
   const mutation = useMutation(registerUser, {
     onSuccess() {
-      navigate("/browse");
+      navigate("/");
       queryClient.invalidateQueries("validateToken");
     },
     onError(error) {

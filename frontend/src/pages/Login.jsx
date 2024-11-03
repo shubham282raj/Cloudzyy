@@ -13,7 +13,7 @@ export default function Login() {
 
   const mutation = useMutation(loginUser, {
     onSuccess() {
-      navigate("/browse");
+      navigate("/");
       queryClient.invalidateQueries("validateToken");
     },
     onError(error) {
