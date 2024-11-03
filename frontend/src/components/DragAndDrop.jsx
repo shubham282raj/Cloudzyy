@@ -3,8 +3,11 @@ import { useDropzone } from "react-dropzone";
 import { useMutation, useQueryClient } from "react-query";
 import { postContent } from "../api/github";
 import { CircularLoader2 } from "./Loader";
+import { useAppContext } from "../Context/AppContext";
 
 const DragAndDrop = ({ setShowUpload, path }) => {
+  const { setScreenLdr } = useAppContext();
+
   const [files, setFiles] = useState([]);
 
   const uploadPathRef = useRef(0);
@@ -28,11 +31,15 @@ const DragAndDrop = ({ setShowUpload, path }) => {
       setShowUpload(false);
       queryClient.refetchQueries(`content-${path}`);
     },
+    onSettled: () => {
+      setScreenLdr(false);
+    },
   });
 
   const handleUpload = () => {
     const uploadPath = uploadPathRef.current;
     mutation.mutate({ files, uploadPath });
+    setScreenLdr(true);
   };
 
   return (

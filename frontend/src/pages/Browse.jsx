@@ -15,6 +15,8 @@ export default function Browse() {
   const [selected, setSelected] = useState([]);
   const [subMenu, setSubMenu] = useState(-1);
 
+  const [showHidden, setShowHidden] = useState(false);
+
   const [showUpload, setShowUpload] = useState(false);
 
   const { data, isLoading, error } = useQuery({
@@ -57,7 +59,7 @@ export default function Browse() {
             <div>{path == "" ? "Root" : path}</div>
           </div>
         </div>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-3">
           {selected.length != 0 && (
             <div className="flex gap-2">
               <div>{selected.length} Selected</div>
@@ -81,6 +83,14 @@ export default function Browse() {
               </button>
             </div>
           )}
+
+          <button title="Add File" onClick={() => setShowHidden((v) => !v)}>
+            {showHidden ? (
+              <img src="/icons/openEye.svg" alt="addFile" className="" />
+            ) : (
+              <img src="/icons/closedEye.svg" alt="addFile" className="" />
+            )}
+          </button>
           <button title="Add File" onClick={() => setShowUpload((v) => !v)}>
             <img src="/icons/addFile.svg" alt="addFile" className="" />
           </button>
@@ -90,7 +100,18 @@ export default function Browse() {
       <div className="my-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {data.map((value, index) =>
           String(value.name).startsWith("hiddenChunks-") ? (
-            <></>
+            showHidden ? (
+              <FileFolder
+                key={`file-folder-${value.html_url}`}
+                data={value}
+                selected={selected}
+                setSelected={setSelected}
+                path={path}
+                setPath={setPath}
+                subMenu={subMenu}
+                setSubMenu={setSubMenu}
+              />
+            ) : null
           ) : (
             <FileFolder
               key={`file-folder-${value.html_url}`}

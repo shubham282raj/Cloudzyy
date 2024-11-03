@@ -28,15 +28,22 @@ export const SquareLoader = () => {
   );
 };
 
-export const CircularLoader2 = () => {
-  return <div class="container"></div>;
+export const CircularLoader2 = ({ showText = false }) => {
+  return (
+    <>
+      <div class="container mx-auto"></div>
+      {showText && (
+        <div id="circularLoader2" className="mx-auto my-3 text-[9px]"></div>
+      )}
+    </>
+  );
 };
 
 export const ScreenLoader = () => {
   return (
     <div className="absolute left-1/2 top-1/2 z-10 flex h-full w-full -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-black bg-opacity-20">
       <div className="scale-[1.8]">
-        <CircularLoader2 />
+        <CircularLoader2 showText={true} />
       </div>
     </div>
   );

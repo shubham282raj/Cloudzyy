@@ -1,15 +1,28 @@
 import { getUser } from "./user";
 
 const getMemoUser = async () => {
-  let user = JSON.parse(localStorage.getItem("user"));
+  const user = getCookie("user"); // Assume getCookie is a function to retrieve a cookie
 
-  if (!user) {
-    user = await getUser();
-    localStorage.setItem("user", JSON.stringify(user));
+  if (user) {
+    return JSON.parse(user);
   }
 
-  return user;
+  const newUser = await getUser();
+  setCookie("user", JSON.stringify(newUser), 5); // Set cookie to expire in 5 minutes
+  return newUser;
 };
+
+// Helper functions to get and set cookies
+function setCookie(name, value, minutes) {
+  const expires = new Date(Date.now() + minutes * 60000).toUTCString();
+  document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+}
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
 
 const joinPaths = (basePath, relativePath) => {
   // Remove trailing slash from basePath if it exists
@@ -62,7 +75,12 @@ export const getContentBuffer = async (data) => {
   const pathArr = data.map((obj) => obj.path);
   const chunkFiles = [];
 
+  let fileNum = 0;
   for (const path of pathArr) {
+    fileNum++;
+    document.getElementById("circularLoader2").innerText =
+      `Downloading File ${fileNum}/${pathArr.length}`;
+
     const response = await getContent(path);
     const downloadDetail = {
       url: response.download_url,
@@ -82,7 +100,7 @@ export const getContentBuffer = async (data) => {
       // Download all chunks
       for (let i = 0; i < totalChunks; i++) {
         const chunkName = chunkNames[i];
-        const chunkPath = `hiddenChunks-${downloadDetail.name.split(".chunkdata")[0]}/${chunkName}`;
+        const chunkPath = `${path.substring(0, path.lastIndexOf("/"))}/hiddenChunks-${downloadDetail.name.split(".chunkdata")[0]}/${chunkName}`;
         const chunkResponse = await getContent(chunkPath);
 
         if (chunkResponse.download_url) {
@@ -105,11 +123,18 @@ export const getContentBuffer = async (data) => {
       combinedFileLink.remove();
       URL.revokeObjectURL(blobUrl); // Clean up
     } else {
-      const a = document.createElement("a");
-      a.href = downloadDetail.url;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      const fileBlob = await fetch(downloadDetail.url).then((res) =>
+        res.blob(),
+      );
+      const fileBlobUrl = URL.createObjectURL(fileBlob);
+
+      const fileDownloadLink = document.createElement("a");
+      fileDownloadLink.href = fileBlobUrl;
+      fileDownloadLink.download = downloadDetail.name;
+      document.body.appendChild(fileDownloadLink);
+      fileDownloadLink.click();
+      fileDownloadLink.remove();
+      URL.revokeObjectURL(fileBlobUrl); // Clean up
     }
   }
 
@@ -120,7 +145,9 @@ export const deleteContent = async (data) => {
   const user = await getMemoUser();
   const responses = [];
 
+  let fileNum = 0;
   for (const dat of data) {
+    fileNum++;
     const url = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${dat.path}`;
 
     try {
@@ -153,7 +180,12 @@ export const deleteContent = async (data) => {
 
         // Ensure chunkList is an array before iterating
         if (Array.isArray(chunkList)) {
+          let chunkNum = 0;
           for (const chunk of chunkList) {
+            chunkNum++;
+            document.getElementById("circularLoader2").innerText =
+              `Deleting File ${fileNum}/${data.length} Chunk ${chunkNum}/${chunkList.length}`;
+
             const chunkDeleteUrl = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${chunk.path}`;
 
             const chunkDeleteResponse = await fetch(chunkDeleteUrl, {
@@ -182,6 +214,8 @@ export const deleteContent = async (data) => {
         }
       } else {
         // Regular file deletion
+        document.getElementById("circularLoader2").innerText =
+          `Deleting File ${fileNum}/${data.length}`;
         const response = await fetch(url, {
           method: "DELETE",
           headers: {
@@ -204,6 +238,8 @@ export const deleteContent = async (data) => {
     } catch (error) {
       console.error(`Error deleting content at path ${dat.path}:`, error);
       throw error;
+    } finally {
+      document.getElementById("circularLoader2").innerText = "";
     }
   }
 
@@ -215,9 +251,13 @@ export const postContent = async ({ files, uploadPath = "" }) => {
   const responses = [];
   const CHUNK_SIZE = 25 * 1024 * 1024; // 25 MB
 
+  let fileNum = 0;
   for (const file of files) {
+    fileNum++;
     try {
       if (file.size <= CHUNK_SIZE) {
+        document.getElementById("circularLoader2").innerText =
+          `Uploading File ${fileNum}/${files.length}`;
         // If file is less than or equal to 25 MB, upload normally
         const base64Content = await readFileAsBase64(file);
         const url = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${joinPaths(uploadPath, file.name)}`;
@@ -252,6 +292,8 @@ export const postContent = async ({ files, uploadPath = "" }) => {
         const chunkMetadata = [];
 
         for (let i = 0; i < chunkCount; i++) {
+          document.getElementById("circularLoader2").innerText =
+            `Uploading File ${fileNum}/${files.length} Chunk ${i + 1}/${chunkCount}`;
           const chunk = file.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
           const chunkName = `${file.name}-part-${i + 1}`;
           chunkMetadata.push(chunkName);
@@ -285,6 +327,8 @@ export const postContent = async ({ files, uploadPath = "" }) => {
     } catch (error) {
       console.error(`Error uploading file ${file.name}:`, error);
       throw error;
+    } finally {
+      document.getElementById("circularLoader2").innerText = "";
     }
   }
 
