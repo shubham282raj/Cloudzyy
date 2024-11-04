@@ -1,13 +1,14 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { deleteContent, getContentBuffer } from "../api/github";
+import { deleteContent, getContent, getContentBuffer } from "../api/github";
 import { useAppContext } from "../Context/AppContext";
+import { shareData } from "../api/share";
 
 export default function Menu({
   data,
   path,
   setSubMenu,
-  options = ["Download", "Delete", "Details"],
+  options = ["Download", "Delete", "Details", "Share"],
 }) {
   const queryClient = useQueryClient();
 
@@ -22,6 +23,20 @@ export default function Menu({
         onSettled: () => setScreenLdr(false),
         onSuccess: () => showToast("Download Started"),
         onError: () => showToast("Download Failed"),
+      }),
+    },
+    {
+      name: "Share",
+      mutation: useMutation({
+        mutationKey: `Sharing-${data[0].path}`,
+        mutationFn: async () => {
+          setScreenLdr(true);
+          const response = await getContent(data[0].path);
+          return await shareData(response.download_url);
+        },
+        onSuccess: (res) => showToast(`Key: ${res}`),
+        onError: (res) => showToast(res),
+        onSettled: () => setScreenLdr(false),
       }),
     },
     {

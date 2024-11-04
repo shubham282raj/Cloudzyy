@@ -54,9 +54,17 @@ export default function FileFolder({
             <div className="aspect-square w-1 rounded-full bg-white"></div>
             <div className="aspect-square w-1 rounded-full bg-white"></div>
             <div className="aspect-square w-1 rounded-full bg-white"></div>
-            {subMenu == data.html_url && (
-              <Menu data={[data]} setSubMenu={setSubMenu} path={path} />
-            )}
+            {subMenu == data.html_url &&
+              (String(data.name).endsWith(".chunkdata") ? (
+                <Menu
+                  data={[data]}
+                  setSubMenu={setSubMenu}
+                  path={path}
+                  options={["Download", "Delete", "Details"]}
+                />
+              ) : (
+                <Menu data={[data]} setSubMenu={setSubMenu} path={path} />
+              ))}
           </button>
         ) : (
           <div></div>

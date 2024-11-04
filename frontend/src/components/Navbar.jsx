@@ -9,8 +9,12 @@ export default function Navbar() {
   const queryClient = useQueryClient();
 
   const links = isLoggedIn
-    ? [{ name: "Profile", url: "profile" }]
+    ? [
+        { name: "Profile", url: "profile" },
+        { name: "Share", url: "share" },
+      ]
     : [
+        { name: "Share", url: "share" },
         { name: "Register", url: "register" },
         { name: "Login", url: "login" },
       ];
@@ -40,7 +44,7 @@ export default function Navbar() {
         />
         Cloudzyy
       </Link>
-      <div className="m-0 flex items-center gap-3">
+      <div className="m-0 flex flex-wrap items-center gap-3">
         {links.map((link, index) => {
           return (
             <Link key={`navbar-key-${link.url}-${index}`} to={link.url}>

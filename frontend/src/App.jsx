@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Browse from "./pages/Browse";
 import Register from "./pages/Resigter";
 import Profile from "./pages/Profile";
+import Share from "./pages/Share";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Browse />} />
+          <Route path="/share" element={<Share />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
