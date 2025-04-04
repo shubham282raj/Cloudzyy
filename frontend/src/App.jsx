@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Browse from "./pages/Browse";
 import Register from "./pages/Resigter";
 import Profile from "./pages/Profile";
+import InstallPWAButton from "./components/InstallPWAButton";
 // import Share from "./pages/Share";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/sign-in" element={<Login />} />
         </Routes>
+        <InstallPWAButton />
       </Router>
     </>
   );

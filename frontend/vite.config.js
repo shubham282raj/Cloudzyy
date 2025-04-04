@@ -2,14 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { VitePWA } from "vite-plugin-pwa";
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), VitePWA(manifestForPlugIn)],
-  server: {
-    port: 4011,
-  },
-});
-
 const manifestForPlugIn = {
   registerType: "autoUpdate",
   workbox: {
@@ -18,9 +10,9 @@ const manifestForPlugIn = {
     globPatterns: ["**/*.{svg,ico}"],
     navigateFallback: "/index.html",
   },
-  // devOptions: {
-  //   enabled: true,
-  // },
+  devOptions: {
+    enabled: true,
+  },
   includeAssets: ["favicon.svg", "**/*"],
   navigateFallback: "/index.html",
   manifest: {
@@ -41,3 +33,11 @@ const manifestForPlugIn = {
     start_url: "/",
   },
 };
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react(), VitePWA(manifestForPlugIn)],
+  server: {
+    port: 4011,
+  },
+});
