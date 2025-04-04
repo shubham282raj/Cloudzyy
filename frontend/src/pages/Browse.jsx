@@ -8,7 +8,7 @@ import { useAppContext } from "../Context/AppContext";
 import { ScreenLoader } from "../components/Loader";
 
 export default function Browse() {
-  const { isLoggedIn } = useAppContext();
+  const { isLoggedIn, isLoginLoading } = useAppContext();
 
   const [path, setPath] = useState("");
 
@@ -22,8 +22,8 @@ export default function Browse() {
   const { data, isLoading, error } = useQuery({
     queryFn: async () => getContent(path || ""),
     queryKey: `content-${path}`,
+    enabled: isLoggedIn,
     onSuccess: (data) => {
-      console.log(data);
       setSelected([]);
       data.sort((a, b) => {
         if (a.type === b.type) return 0;
@@ -35,14 +35,14 @@ export default function Browse() {
     },
   });
 
-  if (!isLoggedIn)
+  if (!isLoggedIn && !isLoginLoading)
     return (
       <div className="mx-auto flex flex-col items-center justify-center">
         <div className="mx-auto text-center">Unauthorized</div>
         <div className="mx-auto text-center">Sign In or Register</div>
       </div>
     );
-  if (isLoading) return <ScreenLoader />;
+  if (isLoading || isLoginLoading) return <ScreenLoader />;
   if (error) return <p>Error: {error.message}</p>;
 
   return (

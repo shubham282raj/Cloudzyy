@@ -1,15 +1,11 @@
 import { getUser } from "./user";
 
+let memoUser = undefined;
+
 const getMemoUser = async () => {
-  const user = getCookie("user"); // Assume getCookie is a function to retrieve a cookie
+  if (!memoUser) memoUser = await getUser();
 
-  if (user) {
-    return JSON.parse(user);
-  }
-
-  const newUser = await getUser();
-  setCookie("user", JSON.stringify(newUser), 5); // Set cookie to expire in 5 minutes
-  return newUser;
+  return memoUser;
 };
 
 // Helper functions to get and set cookies

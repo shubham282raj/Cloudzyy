@@ -31,7 +31,7 @@ export const SquareLoader = () => {
 export const CircularLoader2 = ({ showText = false }) => {
   return (
     <>
-      <div class="container mx-auto"></div>
+      <div className="container mx-auto"></div>
       {showText && (
         <div id="circularLoader2" className="mx-auto my-3 text-[9px]"></div>
       )}

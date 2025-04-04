@@ -5,16 +5,17 @@ import { useAppContext } from "../Context/AppContext";
 import { ScreenLoader } from "../components/Loader";
 
 export default function Profile() {
-  const { isLoggedIn } = useAppContext();
+  const { isLoggedIn, isLoginLoading } = useAppContext();
 
   const { data, isLoading, error } = useQuery({
     queryFn: () => getRateLimit(),
+    enabled: isLoggedIn,
     queryKey: `rate-limit`,
-    onSuccess: (data) => console.log(data),
+    // onSuccess: (data) => console.log(data),
   });
 
-  if (!isLoggedIn) return <p>Unauthorized</p>;
-  if (isLoading) return <ScreenLoader />;
+  if (!isLoggedIn && !isLoginLoading) return <p>Unauthorized</p>;
+  if (isLoading || isLoginLoading) return <ScreenLoader />;
   if (error) return <p>Error: {error.message}</p>;
 
   return (

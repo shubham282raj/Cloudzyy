@@ -1,74 +1,120 @@
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { setCookie } from "./github";
+import { auth, db } from "../firebase";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+// // TODO: Replace with your Firebase config
+// const firebaseConfig = {
+//   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+//   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+//   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+//   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+//   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+//   appId: import.meta.env.VITE_FIREBASE_APP_ID,
+// };
+
+// // Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// const auth = getAuth(app);
+// const db = getFirestore(app);
 
 export const registerUser = async (formData) => {
-  const response = await fetch(`${API_BASE_URL}/api/user/register`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
+  try {
+    // Create auth user
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      formData.email,
+      formData.password,
+    );
 
-  const responseBody = await response.json();
+    // Store additional user data in Firestore
+    await setDoc(doc(db, "users", userCredential.user.uid), {
+      name: formData.name,
+      email: formData.email,
+      githubRepoOwner: formData.githubRepoOwner || "",
+      githubRepo: formData.githubRepo || "",
+      githubToken: formData.githubToken || "",
+      createdAt: new Date().toISOString(),
+    });
 
-  if (!response.ok) {
-    throw new Error(responseBody.message);
+    return userCredential.user;
+  } catch (error) {
+    throw new Error(error.message);
   }
 };
 
 export const loginUser = async (formData) => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      formData.email,
+      formData.password,
+    );
 
-  const responseBody = await response.json();
-
-  if (!response.ok) {
-    throw new Error(responseBody.message);
+    return { user: userCredential.user };
+  } catch (error) {
+    throw new Error(error.message);
   }
 };
 
 export const validateAuthToken = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
-    credentials: "include",
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe();
+      if (user) {
+        resolve({
+          uid: user.uid,
+          email: user.email,
+          isAuthenticated: true,
+        });
+      } else {
+        reject(new Error("Token Invalid"));
+      }
+    });
   });
-
-  if (!response.ok) {
-    throw new Error("Token Invalid");
-  }
-
-  return response.json();
 };
 
 export const getUser = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/user/profile`, {
-    credentials: "include",
-  });
+  console.log("Get User Called");
+  try {
+    const user = auth.currentUser;
 
-  if (!response.ok) {
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    // Get user profile data from Firestore
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+
+    if (!userDoc.exists()) {
+      throw new Error("User profile not found");
+    }
+
+    const userData = userDoc.data();
+
+    return {
+      id: user.uid,
+      email: user.email,
+      name: userData.name,
+      githubRepoOwner: userData.githubRepoOwner,
+      githubRepo: userData.githubRepo,
+      githubToken: userData.githubToken,
+    };
+  } catch (error) {
     throw new Error("Failed to get User");
   }
-
-  const userData = await response.json();
-  return userData;
 };
 
 export const logOut = async () => {
-  setCookie("user", "", 0);
-  const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
-    credentials: "include",
-    method: "POST",
-  });
-
-  if (!response.ok) {
+  try {
+    setCookie("user", "", 0);
+    await signOut(auth);
+  } catch (error) {
     throw new Error("Error while Logging Out");
   }
 };

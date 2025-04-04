@@ -9,9 +9,13 @@ const AppContext = createContext(undefined);
 
 export const AppContextProvider = ({ children }) => {
   const [toast, setToast] = useState(undefined);
-  const { isSuccess } = useQuery("validateToken", validateAuthToken, {
-    retry: false,
-  });
+  const { isSuccess, isLoading: validateTokenLoading } = useQuery(
+    "validateToken",
+    validateAuthToken,
+    {
+      retry: false,
+    },
+  );
 
   const [screenLdr, setScreenLdr] = useState(false);
 
@@ -21,6 +25,7 @@ export const AppContextProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         isLoggedIn: isSuccess,
+        isLoginLoading: validateTokenLoading,
         showToast: (message, type = "SUCCESS") => setToast({ message, type }),
         setScreenLdr: setScreenLdr,
         showFileProp: showFileProp,

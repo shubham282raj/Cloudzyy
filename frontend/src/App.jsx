@@ -13,10 +13,10 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Browse />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/share" element={<Share />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>
     </>
