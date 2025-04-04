@@ -6,6 +6,7 @@ import Menu from "../components/Menu";
 import DragAndDrop from "../components/DragAndDrop";
 import { useAppContext } from "../Context/AppContext";
 import { ScreenLoader } from "../components/Loader";
+import UnauthorizedMessage from "../components/UnauthorizedMessage";
 
 export default function Browse() {
   const { isLoggedIn, isLoginLoading } = useAppContext();
@@ -35,13 +36,7 @@ export default function Browse() {
     },
   });
 
-  if (!isLoggedIn && !isLoginLoading)
-    return (
-      <div className="mx-auto flex flex-col items-center justify-center">
-        <div className="mx-auto text-center">Unauthorized</div>
-        <div className="mx-auto text-center">Sign In or Register</div>
-      </div>
-    );
+  if (!isLoggedIn && !isLoginLoading) return <UnauthorizedMessage />;
   if (isLoading || isLoginLoading) return <ScreenLoader />;
   if (error) return <p>Error: {error.message}</p>;
 

@@ -10,13 +10,14 @@ export default function Navbar() {
 
   const links = isLoggedIn
     ? [
+        { name: "Browse", url: "/" },
         { name: "Profile", url: "profile" },
-        { name: "Share", url: "share" },
+        // { name: "Share", url: "share" },
       ]
     : [
-        { name: "Share", url: "share" },
+        // { name: "Share", url: "share" },
         { name: "Register", url: "register" },
-        { name: "Login", url: "login" },
+        { name: "Sign In", url: "sign-in" },
       ];
 
   const navigate = useNavigate();

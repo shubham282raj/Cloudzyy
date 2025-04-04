@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import Browse from "./pages/Browse";
 import Register from "./pages/Resigter";
 import Profile from "./pages/Profile";
-import Share from "./pages/Share";
+// import Share from "./pages/Share";
 
 function App() {
   return (
@@ -14,9 +14,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Browse />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/share" element={<Share />} />
+          {/* <Route path="/share" element={<Share />} /> */}
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/sign-in" element={<Login />} />
         </Routes>
       </Router>
     </>

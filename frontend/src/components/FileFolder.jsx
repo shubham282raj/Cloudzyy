@@ -1,5 +1,7 @@
 import React from "react";
 import Menu from "./Menu";
+import { useAppContext } from "../Context/AppContext";
+import { getContentBuffer } from "../api/github";
 
 export default function FileFolder({
   data,
@@ -10,6 +12,8 @@ export default function FileFolder({
   subMenu,
   setSubMenu,
 }) {
+  const { showToast, setScreenLdr } = useAppContext();
+
   const thisSelected = selected.some((item) => item.html_url === data.html_url);
 
   return (
@@ -40,32 +44,85 @@ export default function FileFolder({
         }
       }}
     >
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-1">
         {data.type == "file" ? (
-          <button
-            className="relative flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSubMenu((menu) =>
-                menu == data.html_url ? -1 : data.html_url,
-              );
-            }}
-          >
-            <div className="aspect-square w-1 rounded-full bg-white"></div>
-            <div className="aspect-square w-1 rounded-full bg-white"></div>
-            <div className="aspect-square w-1 rounded-full bg-white"></div>
-            {subMenu == data.html_url &&
-              (String(data.name).endsWith(".chunkdata") ? (
-                <Menu
-                  data={[data]}
-                  setSubMenu={setSubMenu}
-                  path={path}
-                  options={["Download", "Delete", "Details"]}
-                />
-              ) : (
-                <Menu data={[data]} setSubMenu={setSubMenu} path={path} />
-              ))}
-          </button>
+          <>
+            {!String(data.name).endsWith(".chunkdata") && (
+              <>
+                <button
+                  title="Copy URL"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(data.download_url);
+                    showToast("Copied to Clipboard");
+                  }}
+                  className="flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
+                >
+                  <img src="icons/copy.svg" alt="download btn" className="" />
+                </button>
+              </>
+            )}
+            <button
+              title="Download"
+              // to={data.download_url}
+              onClick={async (e) => {
+                e.stopPropagation();
+                try {
+                  setScreenLdr(true);
+                  await new Promise((resolve) => setTimeout(resolve, 10));
+                  await getContentBuffer([data]);
+                } catch (error) {
+                  console.error(error);
+                } finally {
+                  setScreenLdr(false);
+                }
+                // const fileBlob = await fetch(data.url).then((res) =>
+                //   res.blob(),
+                // );
+                // const fileBlobUrl = URL.createObjectURL(fileBlob);
+
+                // const fileDownloadLink = document.createElement("a");
+                // fileDownloadLink.href = fileBlobUrl;
+                // fileDownloadLink.download = data.name;
+                // document.body.appendChild(fileDownloadLink);
+                // fileDownloadLink.click();
+                // fileDownloadLink.remove();
+                // URL.revokeObjectURL(fileBlobUrl); // Clean up
+                showToast("Downloaded");
+              }}
+              className="flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
+            >
+              <img
+                src="icons/download.svg"
+                alt="download btn"
+                className="invert"
+              />
+            </button>
+            <button
+              className="relative flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSubMenu((menu) =>
+                  menu == data.html_url ? -1 : data.html_url,
+                );
+              }}
+            >
+              <div className="aspect-square w-1 rounded-full bg-white"></div>
+              <div className="aspect-square w-1 rounded-full bg-white"></div>
+              <div className="aspect-square w-1 rounded-full bg-white"></div>
+              {subMenu == data.html_url &&
+                (String(data.name).endsWith(".chunkdata") ? (
+                  <Menu
+                    data={[data]}
+                    setSubMenu={setSubMenu}
+                    path={path}
+                    options={["Download", "Delete", "Details"]}
+                  />
+                ) : (
+                  <Menu data={[data]} setSubMenu={setSubMenu} path={path} />
+                ))}
+            </button>
+          </>
         ) : (
           <div></div>
         )}

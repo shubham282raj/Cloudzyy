@@ -179,6 +179,7 @@ export const getContentBuffer = async (data) => {
       }
     }
   } catch (error) {
+    console.error(error);
     throw error;
   } finally {
     document.getElementById("circularLoader2").innerText = "";

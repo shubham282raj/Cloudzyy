@@ -8,7 +8,7 @@ export default function Menu({
   data,
   path,
   setSubMenu,
-  options = ["Download", "Delete", "Details", "Share"],
+  options = ["Download", "Delete", "Details"],
 }) {
   const queryClient = useQueryClient();
 
