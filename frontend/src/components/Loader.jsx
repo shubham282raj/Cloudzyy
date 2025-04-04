@@ -41,7 +41,7 @@ export const CircularLoader2 = ({ showText = false }) => {
 
 export const ScreenLoader = () => {
   return (
-    <div className="fixed left-1/2 top-0 z-10 flex h-screen w-full -translate-x-1/2 items-center justify-center bg-black bg-opacity-20">
+    <div className="fixed left-1/2 top-0 z-10 flex h-screen w-full -translate-x-1/2 items-center justify-center bg-black bg-opacity-20 backdrop-blur-3xl">
       <div className="scale-[1.8]">
         <CircularLoader2 showText={true} />
       </div>

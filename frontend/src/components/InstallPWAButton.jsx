@@ -77,7 +77,7 @@ const InstallPWAButton = () => {
         <div className="flex justify-center gap-2">
           <button
             onClick={handleInstallClick}
-            className="bg-navbar-selected text-navbar-text w-32 rounded bg-gray-200 p-3 text-black shadow"
+            className="bg-navbar-selected text-navbar-text w-32 rounded bg-gray-200 p-3 font-semibold text-gray-900 shadow"
           >
             Install App
           </button>

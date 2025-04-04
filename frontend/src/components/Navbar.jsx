@@ -10,14 +10,14 @@ export default function Navbar() {
 
   const links = isLoggedIn
     ? [
-        { name: "Browse", url: "/" },
-        { name: "Profile", url: "profile" },
+        // { name: "Browse", url: "/" },
+        { name: "Profile", url: "profile", image: "icons/user.svg" },
         // { name: "Share", url: "share" },
       ]
     : [
         // { name: "Share", url: "share" },
-        { name: "Register", url: "register" },
-        { name: "Sign In", url: "sign-in" },
+        { name: "Register", url: "register", image: "icons/user-plus.svg" },
+        { name: "Sign In", url: "sign-in", image: "icons/log-in.svg" },
       ];
 
   const navigate = useNavigate();
@@ -45,16 +45,39 @@ export default function Navbar() {
         />
         Cloudzyy
       </Link>
-      <div className="m-0 flex flex-wrap items-center gap-3">
+      <div className="m-0 flex flex-wrap items-center gap-1">
         {links.map((link, index) => {
           return (
-            <Link key={`navbar-key-${link.url}-${index}`} to={link.url}>
+            <Link
+              key={`navbar-key-${link.url}-${index}`}
+              to={link.url}
+              className="rounded px-2 py-1 transition-all duration-200 hover:bg-gray-900"
+            >
               {link.name}
+              {link.image && (
+                <img
+                  src={link.image}
+                  alt={link.name}
+                  title={link.name}
+                  className="ml-1 inline invert"
+                />
+              )}
             </Link>
           );
         })}
         {isLoggedIn && (
-          <button onClick={() => mutation.mutate()}>Sign Out</button>
+          <button
+            className="rounded px-2 py-1 transition-all duration-200 hover:bg-gray-900"
+            onClick={() => mutation.mutate()}
+          >
+            Sign Out
+            <img
+              src="icons/log-out.svg"
+              alt="log out"
+              title="Log Out"
+              className="ml-1 inline invert"
+            />
+          </button>
         )}
       </div>
     </div>
