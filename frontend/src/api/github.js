@@ -8,7 +8,7 @@ export const getMemoUser = async () => {
   return memoUser;
 };
 
-const joinPaths = (basePath, relativePath) => {
+export const joinPaths = (basePath, relativePath) => {
   // Remove trailing slash from basePath if it exists
   const cleanedBasePath = String(basePath)
     .replace(/^\/+/, "")
@@ -55,98 +55,8 @@ export const getContent = async (path) => {
   }
 };
 
-export const postContent = async ({ files, uploadPath = "" }) => {
-  const user = await getMemoUser();
-  const responses = [];
-  const CHUNK_SIZE = 25 * 1024 * 1024; // 25 MB
-
-  let fileNum = 0;
-  for (const file of files) {
-    fileNum++;
-    try {
-      if (file.size <= CHUNK_SIZE) {
-        document.getElementById("circularLoader2").innerText =
-          `Uploading File ${fileNum}/${files.length}`;
-        // If file is less than or equal to 25 MB, upload normally
-        const base64Content = await readFileAsBase64(file);
-        const url = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${joinPaths(uploadPath, file.name)}`;
-
-        const response = await fetch(url, {
-          method: "PUT",
-          headers: {
-            Authorization: `token ${user.githubToken}`,
-            "X-GitHub-Api-Version": "2022-11-28",
-            Accept: "application/vnd.github.v3+json",
-          },
-          body: JSON.stringify({
-            message: `Adding file: ${file.name}`,
-            content: base64Content,
-          }),
-        });
-
-        const responseBody = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            responseBody.message || `Failed to upload ${file.name}`,
-          );
-        }
-
-        responses.push(responseBody);
-      } else {
-        // Handle chunked upload for files larger than 25 MB
-        const chunkCount = Math.ceil(file.size / CHUNK_SIZE);
-        const chunkFolderName = `hiddenChunks-${file.name}`;
-        const chunkPath = `${uploadPath}/${chunkFolderName}`;
-        const chunkMetadata = [];
-
-        for (let i = 0; i < chunkCount; i++) {
-          document.getElementById("circularLoader2").innerText =
-            `Uploading File ${fileNum}/${files.length} Chunk ${i + 1}/${chunkCount}`;
-          const chunk = file.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
-          const chunkName = `${file.name}-part-${i + 1}`;
-          chunkMetadata.push(chunkName);
-
-          const chunkResponse = await uploadSingleFile(
-            chunk,
-            user.githubRepoOwner,
-            user.githubRepo,
-            chunkPath,
-            chunkName,
-          );
-          responses.push(chunkResponse);
-        }
-
-        // Create and upload metadata file in the uploadPath
-        const metadataContent = `Chunk Names:\n${chunkMetadata.join("\n")}\nTotal Chunks: ${chunkCount}`;
-        const metadataBlob = new Blob([metadataContent], {
-          type: "text/plain",
-        });
-        const metadataFile = new File([metadataBlob], `${file.name}.chunkdata`);
-
-        const metadataResponse = await uploadSingleFile(
-          metadataFile,
-          user.githubRepoOwner,
-          user.githubRepo,
-          uploadPath,
-          `${file.name}.chunkdata`,
-        );
-        responses.push(metadataResponse);
-      }
-    } catch (error) {
-      console.error(`Error uploading file ${file.name}:`, error);
-      throw error;
-    } finally {
-      document.getElementById("circularLoader2").innerText = "";
-    }
-  }
-
-  console.log(responses);
-  return responses;
-};
-
 // Helper function to read a file as Base64
-const readFileAsBase64 = (file) => {
+export const readFileAsBase64 = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -156,7 +66,7 @@ const readFileAsBase64 = (file) => {
 };
 
 // Helper function to upload a single file
-const uploadSingleFile = async (
+export const uploadSingleFile = async (
   file,
   repoOwner,
   repo,

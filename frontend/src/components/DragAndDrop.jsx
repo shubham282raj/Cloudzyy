@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useMutation, useQueryClient } from "react-query";
-import { postContent } from "../api/github";
 import { CircularLoader2 } from "./Loader";
 import { useAppContext } from "../Context/AppContext";
+import useGithub from "../api/useGithub";
 
 const DragAndDrop = ({ setShowUpload, path }) => {
   const { setScreenLdr } = useAppContext();
+
+  const { postContent } = useGithub();
 
   const [files, setFiles] = useState([]);
 
