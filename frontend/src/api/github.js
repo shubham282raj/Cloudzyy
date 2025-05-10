@@ -2,7 +2,7 @@ import { getUser } from "./user";
 
 let memoUser = undefined;
 
-const getMemoUser = async () => {
+export const getMemoUser = async () => {
   if (!memoUser) memoUser = await getUser();
 
   return memoUser;
@@ -53,111 +53,6 @@ export const getContent = async (path) => {
     console.error("Error fetching content:", error);
     throw error;
   }
-};
-
-export const deleteContent = async (data) => {
-  const user = await getMemoUser();
-  const responses = [];
-
-  let fileNum = 0;
-  for (const dat of data) {
-    fileNum++;
-    const url = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${dat.path}`;
-
-    try {
-      if (dat.path.endsWith(".chunkdata")) {
-        // If the file is a chunkdata file, delete it and its chunks
-        const deleteResponse = await fetch(url, {
-          method: "DELETE",
-          headers: {
-            Authorization: `token ${user.githubToken}`,
-            "X-GitHub-Api-Version": "2022-11-28",
-            Accept: "application/vnd.github.v3+json",
-          },
-          body: JSON.stringify({
-            message: `Deleting Chunkdata File: ${dat.path}`,
-            sha: dat.sha,
-          }),
-        });
-
-        if (!deleteResponse.ok) {
-          throw new Error(
-            `Failed to delete ${dat.path}: ${deleteResponse.status}`,
-          );
-        }
-
-        responses.push(await deleteResponse.json());
-
-        // Construct the full path for the chunk folder
-        const chunkFolderName = `${dat.path.substring(0, dat.path.lastIndexOf("/"))}/hiddenChunks-${dat.name.split(".chunkdata")[0]}`;
-        const chunkList = await getContent(chunkFolderName);
-
-        // Ensure chunkList is an array before iterating
-        if (Array.isArray(chunkList)) {
-          let chunkNum = 0;
-          for (const chunk of chunkList) {
-            chunkNum++;
-            document.getElementById("circularLoader2").innerText =
-              `Deleting File ${fileNum}/${data.length} Chunk ${chunkNum}/${chunkList.length}`;
-
-            const chunkDeleteUrl = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${chunk.path}`;
-
-            const chunkDeleteResponse = await fetch(chunkDeleteUrl, {
-              method: "DELETE",
-              headers: {
-                Authorization: `token ${user.githubToken}`,
-                "X-GitHub-Api-Version": "2022-11-28",
-                Accept: "application/vnd.github.v3+json",
-              },
-              body: JSON.stringify({
-                message: `Deleting Chunk: ${chunk.path}`,
-                sha: chunk.sha,
-              }),
-            });
-
-            if (!chunkDeleteResponse.ok) {
-              console.error(
-                `Failed to delete chunk ${chunk.path}: ${chunkDeleteResponse.status}`,
-              );
-            } else {
-              responses.push(await chunkDeleteResponse.json());
-            }
-          }
-        } else {
-          console.warn(`No chunks found for folder: ${chunkFolderName}`);
-        }
-      } else {
-        // Regular file deletion
-        document.getElementById("circularLoader2").innerText =
-          `Deleting File ${fileNum}/${data.length}`;
-        const response = await fetch(url, {
-          method: "DELETE",
-          headers: {
-            Authorization: `token ${user.githubToken}`,
-            "X-GitHub-Api-Version": "2022-11-28",
-            Accept: "application/vnd.github.v3+json",
-          },
-          body: JSON.stringify({
-            message: `Deleting File: ${dat.path}`,
-            sha: dat.sha,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to delete ${dat.path}: ${response.status}`);
-        }
-
-        responses.push(await response.json());
-      }
-    } catch (error) {
-      console.error(`Error deleting content at path ${dat.path}:`, error);
-      throw error;
-    } finally {
-      document.getElementById("circularLoader2").innerText = "";
-    }
-  }
-
-  return responses;
 };
 
 export const postContent = async ({ files, uploadPath = "" }) => {

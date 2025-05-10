@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { deleteContent, getContent } from "../api/github";
+import { getContent } from "../api/github";
 import { useAppContext } from "../Context/AppContext";
 import { shareData } from "../api/share";
 import useGithub from "../api/useGithub";
@@ -14,7 +14,7 @@ export default function Menu({
   const queryClient = useQueryClient();
 
   const { setScreenLdr, showToast, showFileProp } = useAppContext();
-  const { downloadBufferContent } = useGithub();
+  const { downloadBufferContent, deleteContent } = useGithub();
 
   const menuOptions = [
     {
