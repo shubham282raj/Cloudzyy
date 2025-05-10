@@ -18,6 +18,7 @@ export const AppContextProvider = ({ children }) => {
   );
 
   const [screenLdr, setScreenLdr] = useState(false);
+  const [loaderTxt, setLoaderTxt] = useState("Hello Loader");
 
   const [fileProp, showFileProp] = useState(undefined);
 
@@ -29,6 +30,8 @@ export const AppContextProvider = ({ children }) => {
         showToast: (message, type = "SUCCESS") => setToast({ message, type }),
         setScreenLdr: setScreenLdr,
         showFileProp: showFileProp,
+        loaderTxt: loaderTxt,
+        setLoaderTxt: setLoaderTxt,
       }}
     >
       {children}

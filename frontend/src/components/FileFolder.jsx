@@ -1,7 +1,7 @@
 import React from "react";
 import Menu from "./Menu";
 import { useAppContext } from "../Context/AppContext";
-import { getContentBuffer } from "../api/github";
+import useGithub from "../api/useGithub";
 
 export default function FileFolder({
   data,
@@ -13,6 +13,7 @@ export default function FileFolder({
   setSubMenu,
 }) {
   const { showToast, setScreenLdr } = useAppContext();
+  const { downloadBufferContent } = useGithub();
 
   const thisSelected = selected.some((item) => item.html_url === data.html_url);
 
@@ -70,7 +71,7 @@ export default function FileFolder({
                 try {
                   setScreenLdr(true);
                   await new Promise((resolve) => setTimeout(resolve, 10));
-                  await getContentBuffer([data]);
+                  await downloadBufferContent([data]);
                 } catch (error) {
                   console.error(error);
                 } finally {

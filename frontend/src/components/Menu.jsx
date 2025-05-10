@@ -1,8 +1,9 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { deleteContent, getContent, getContentBuffer } from "../api/github";
+import { deleteContent, getContent } from "../api/github";
 import { useAppContext } from "../Context/AppContext";
 import { shareData } from "../api/share";
+import useGithub from "../api/useGithub";
 
 export default function Menu({
   data,
@@ -13,13 +14,14 @@ export default function Menu({
   const queryClient = useQueryClient();
 
   const { setScreenLdr, showToast, showFileProp } = useAppContext();
+  const { downloadBufferContent } = useGithub();
 
   const menuOptions = [
     {
       name: "Download",
       mutation: useMutation({
         mutationKey: `Download-${data[0].html_url}`,
-        mutationFn: () => getContentBuffer(data),
+        mutationFn: () => downloadBufferContent(data),
         onSettled: () => setScreenLdr(false),
         onSuccess: () => showToast("Download Started"),
         onError: () => showToast("Download Failed"),

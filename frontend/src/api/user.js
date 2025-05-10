@@ -5,23 +5,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { setCookie } from "./github";
 import { auth, db } from "../firebase";
-
-// // TODO: Replace with your Firebase config
-// const firebaseConfig = {
-//   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-//   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-//   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-//   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-//   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-//   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-// };
-
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const auth = getAuth(app);
-// const db = getFirestore(app);
 
 export const registerUser = async (formData) => {
   try {
@@ -112,7 +96,6 @@ export const getUser = async () => {
 
 export const logOut = async () => {
   try {
-    setCookie("user", "", 0);
     await signOut(auth);
   } catch (error) {
     throw new Error("Error while Logging Out");

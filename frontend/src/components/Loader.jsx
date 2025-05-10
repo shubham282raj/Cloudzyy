@@ -1,3 +1,4 @@
+import { useAppContext } from "../Context/AppContext";
 import "./Loader.css";
 
 export const TriangularLoader = () => {
@@ -29,12 +30,12 @@ export const SquareLoader = () => {
 };
 
 export const CircularLoader2 = ({ showText = false }) => {
+  const { loaderTxt } = useAppContext();
+
   return (
     <>
       <div className="container mx-auto"></div>
-      {showText && (
-        <div id="circularLoader2" className="mx-auto my-3 text-[9px]"></div>
-      )}
+      {showText && <div className="mx-auto my-3 text-[9px]">{loaderTxt}</div>}
     </>
   );
 };
