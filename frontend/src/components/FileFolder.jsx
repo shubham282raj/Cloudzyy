@@ -46,7 +46,7 @@ export default function FileFolder({
       }}
     >
       <div className="flex justify-end gap-1">
-        {data.type == "file" ? (
+        {data.type ? (
           <>
             {!String(data.name).endsWith(".chunkdata") && (
               <>

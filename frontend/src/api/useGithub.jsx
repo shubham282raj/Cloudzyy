@@ -132,12 +132,20 @@ export default function useGithub() {
     const user = await getMemoUser();
     const responses = [];
 
+    console.log(data);
+
     let fileNum = 0;
     for (const dat of data) {
-      fileNum++;
-      const url = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${dat.path}`;
-
       try {
+        if (dat.type == "dir") {
+          const res = await getContent(dat.path);
+          await deleteContent(res);
+          continue;
+        }
+
+        fileNum++;
+        const url = `https://api.github.com/repos/${user.githubRepoOwner}/${user.githubRepo}/contents/${dat.path}`;
+
         if (dat.path.endsWith(".chunkdata")) {
           // If the file is a chunkdata file, delete it and its chunks
           const deleteResponse = await fetch(url, {
@@ -224,7 +232,7 @@ export default function useGithub() {
         }
       } catch (error) {
         console.error(`Error deleting content at path ${dat.path}:`, error);
-        throw error;
+        // throw error;
       } finally {
         setLoaderTxt("");
       }

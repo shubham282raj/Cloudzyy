@@ -97,7 +97,11 @@ export default function Browse() {
               <img src="/icons/closedEye.svg" alt="addFile" className="" />
             )}
           </button>
-          <button title="Add File" onClick={() => setShowUpload((v) => !v)}>
+          <button
+            title="Add File"
+            onClick={() => setShowUpload((v) => !v)}
+            onDragEnter={() => setShowUpload(true)}
+          >
             <img src="/icons/addFile.svg" alt="addFile" className="" />
           </button>
         </div>
