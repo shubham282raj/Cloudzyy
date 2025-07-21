@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getContent } from "../api/github";
 import FileFolder from "../components/FileFolder";
@@ -7,11 +7,27 @@ import DragAndDrop from "../components/DragAndDrop";
 import { useAppContext } from "../Context/AppContext";
 import { ScreenLoader } from "../components/Loader";
 import UnauthorizedMessage from "../components/UnauthorizedMessage";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Browse() {
   const { isLoggedIn, isLoginLoading } = useAppContext();
+  const navigate = useNavigate();
 
-  const [path, setPath] = useState("");
+  const location = useLocation();
+  const path = location.pathname
+    .replace("/browser/", "")
+    .replace("/browser", "");
+
+  useEffect(() => {
+    console.log(location.pathname, path);
+  }, []);
+
+  // const [path, _setPath] = useState();
+  const setPath = (nextPath) => {
+    const urlSafe = encodeURIComponent(nextPath);
+    navigate(`/browser/${urlSafe}`);
+    console.log(urlSafe);
+  };
 
   const [selected, setSelected] = useState([]);
   const [subMenu, setSubMenu] = useState(-1);
@@ -50,15 +66,15 @@ export default function Browse() {
             title="Go Back"
             onClick={() => {
               setSelected([]);
-              setPath((path) => path.substring(0, path.lastIndexOf("/")));
+              setPath(path.substring(0, path.lastIndexOf("/")));
             }}
           >
-            <img src="icons/uparrow.svg" alt="go_back" className="h-3/4" />
+            <img src="/icons/uparrow.svg" alt="go_back" className="h-3/4" />
           </button>
           <div className="flex gap-2" title={path == "" ? "Root" : path}>
             <div className="flex-shrink-0 font-semibold">Current Path:</div>
             <div className="line-clamp-1 flex-shrink flex-grow-0 break-all">
-              {path == "" ? "Root" : path}
+              {path == "" ? "Root" : decodeURIComponent(path)}
             </div>
           </div>
         </div>

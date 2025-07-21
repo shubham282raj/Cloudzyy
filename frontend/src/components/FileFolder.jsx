@@ -59,7 +59,7 @@ export default function FileFolder({
                   }}
                   className="flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
                 >
-                  <img src="icons/copy.svg" alt="download btn" className="" />
+                  <img src="/icons/copy.svg" alt="download btn" className="" />
                 </button>
               </>
             )}
@@ -94,7 +94,7 @@ export default function FileFolder({
               className="flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
             >
               <img
-                src="icons/download.svg"
+                src="/icons/download.svg"
                 alt="download btn"
                 className="invert"
               />
@@ -131,7 +131,7 @@ export default function FileFolder({
 
       <div className="flex flex-col items-center">
         <img
-          src={data.type == "file" ? "icons/file.svg" : "icons/folder.svg"}
+          src={data.type == "file" ? "/icons/file.svg" : "/icons/folder.svg"}
           alt=""
           className="w-14"
         />

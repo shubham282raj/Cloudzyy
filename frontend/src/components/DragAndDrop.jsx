@@ -48,8 +48,8 @@ const DragAndDrop = ({ setShowUpload, path }) => {
     <div className="my-3 flex">
       <div className="flex-grow">
         <div className="flex justify-center gap-1">
-          <div className="flex- mb-1 items-center break-all rounded-lg bg-gray-800 px-3">
-            {path == "" ? "Root" : path} /
+          <div className="mb-1 flex items-center break-all rounded-lg bg-gray-800 px-3">
+            {path == "" ? "Root" : decodeURIComponent(path)} /
           </div>
           <input
             type="text"
@@ -96,7 +96,7 @@ const DragAndDrop = ({ setShowUpload, path }) => {
                     className="flex-shrink-0"
                   >
                     <img
-                      src="icons/cross.svg"
+                      src="/icons/cross.svg"
                       alt="individual-cross"
                       className=""
                     />

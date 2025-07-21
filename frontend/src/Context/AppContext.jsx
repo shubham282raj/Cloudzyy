@@ -18,7 +18,7 @@ export const AppContextProvider = ({ children }) => {
   );
 
   const [screenLdr, setScreenLdr] = useState(false);
-  const [loaderTxt, setLoaderTxt] = useState("Hello Loader");
+  const [loaderTxt, setLoaderTxt] = useState("");
 
   const [fileProp, showFileProp] = useState(undefined);
 

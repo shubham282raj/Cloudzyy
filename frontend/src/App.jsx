@@ -5,6 +5,7 @@ import Browse from "./pages/Browse";
 import Register from "./pages/Resigter";
 import Profile from "./pages/Profile";
 import InstallPWAButton from "./components/InstallPWAButton";
+import Home from "./pages/Home";
 // import Share from "./pages/Share";
 
 function App() {
@@ -13,7 +14,8 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Browse />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/browser/*" element={<Browse />} />
           <Route path="/profile" element={<Profile />} />
           {/* <Route path="/share" element={<Share />} /> */}
           <Route path="/register" element={<Register />} />

@@ -10,14 +10,14 @@ export default function Navbar() {
 
   const links = isLoggedIn
     ? [
-        // { name: "Browse", url: "/" },
-        { name: "Profile", url: "profile", image: "icons/user.svg" },
+        { name: "Browse", url: "/browser", image: "/icons/search.svg" },
+        { name: "Profile", url: "profile", image: "/icons/user.svg" },
         // { name: "Share", url: "share" },
       ]
     : [
         // { name: "Share", url: "share" },
-        { name: "Register", url: "register", image: "icons/user-plus.svg" },
-        { name: "Sign In", url: "sign-in", image: "icons/log-in.svg" },
+        { name: "Register", url: "register", image: "/icons/user-plus.svg" },
+        { name: "Sign In", url: "sign-in", image: "/icons/log-in.svg" },
       ];
 
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ export default function Navbar() {
         className="m-0 flex items-center gap-3 text-lg font-bold tracking-widest"
       >
         <img
-          src="favicon.svg"
+          src="/favicon.svg"
           alt="logo"
           className="inline-block scale-[1.5]"
         />
@@ -72,7 +72,7 @@ export default function Navbar() {
           >
             Sign Out
             <img
-              src="icons/log-out.svg"
+              src="/icons/log-out.svg"
               alt="log out"
               title="Log Out"
               className="ml-1 inline invert"
