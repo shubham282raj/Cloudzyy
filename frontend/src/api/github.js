@@ -122,7 +122,7 @@ export const getRateLimit = async () => {
       );
     }
 
-    return responseBody;
+    return responseBody.rate;
   } catch (error) {
     console.error("Error fetching rate limit:", error);
     throw error;

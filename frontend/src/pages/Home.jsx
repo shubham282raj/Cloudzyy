@@ -1,8 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../Context/AppContext";
+import { useEffect } from "react";
 
 export default function Home() {
   const { isLoggedIn, showToast } = useAppContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) navigate("/browser");
+  }, [isLoggedIn]);
 
   return (
     <div className="mx-auto flex max-w-md flex-col items-center justify-center gap-1 px-4 py-10 text-center">

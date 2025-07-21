@@ -63,42 +63,44 @@ export default function FileFolder({
                 </button>
               </>
             )}
-            <button
-              title="Download"
-              // to={data.download_url}
-              onClick={async (e) => {
-                e.stopPropagation();
-                try {
-                  setScreenLdr(true);
-                  await new Promise((resolve) => setTimeout(resolve, 10));
-                  await downloadBufferContent([data]);
-                } catch (error) {
-                  console.error(error);
-                } finally {
-                  setScreenLdr(false);
-                }
-                // const fileBlob = await fetch(data.url).then((res) =>
-                //   res.blob(),
-                // );
-                // const fileBlobUrl = URL.createObjectURL(fileBlob);
+            {data.type == "file" && (
+              <button
+                title="Download"
+                // to={data.download_url}
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  try {
+                    setScreenLdr(true);
+                    await new Promise((resolve) => setTimeout(resolve, 10));
+                    await downloadBufferContent([data]);
+                  } catch (error) {
+                    console.error(error);
+                  } finally {
+                    setScreenLdr(false);
+                  }
+                  // const fileBlob = await fetch(data.url).then((res) =>
+                  //   res.blob(),
+                  // );
+                  // const fileBlobUrl = URL.createObjectURL(fileBlob);
 
-                // const fileDownloadLink = document.createElement("a");
-                // fileDownloadLink.href = fileBlobUrl;
-                // fileDownloadLink.download = data.name;
-                // document.body.appendChild(fileDownloadLink);
-                // fileDownloadLink.click();
-                // fileDownloadLink.remove();
-                // URL.revokeObjectURL(fileBlobUrl); // Clean up
-                showToast("Downloaded");
-              }}
-              className="flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
-            >
-              <img
-                src="/icons/download.svg"
-                alt="download btn"
-                className="invert"
-              />
-            </button>
+                  // const fileDownloadLink = document.createElement("a");
+                  // fileDownloadLink.href = fileBlobUrl;
+                  // fileDownloadLink.download = data.name;
+                  // document.body.appendChild(fileDownloadLink);
+                  // fileDownloadLink.click();
+                  // fileDownloadLink.remove();
+                  // URL.revokeObjectURL(fileBlobUrl); // Clean up
+                  showToast("Downloaded");
+                }}
+                className="flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
+              >
+                <img
+                  src="/icons/download.svg"
+                  alt="download btn"
+                  className="invert"
+                />
+              </button>
+            )}
             <button
               className="relative flex aspect-square h-7 flex-col items-center justify-evenly rounded-md border border-transparent hover:border-slate-600"
               onClick={(e) => {

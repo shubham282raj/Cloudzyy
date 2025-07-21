@@ -35,7 +35,7 @@ export default function Navbar() {
   return (
     <div className="mb-5 flex h-16 items-center justify-between rounded-lg bg-gray-800 px-5">
       <Link
-        to="/"
+        to={isLoggedIn ? "/browser" : "/"}
         className="m-0 flex items-center gap-3 text-lg font-bold tracking-widest"
       >
         <img
@@ -65,7 +65,7 @@ export default function Navbar() {
             </Link>
           );
         })}
-        {isLoggedIn && (
+        {/* {isLoggedIn && (
           <button
             className="rounded px-2 py-1 transition-all duration-200 hover:bg-gray-900"
             onClick={() => mutation.mutate()}
@@ -78,7 +78,7 @@ export default function Navbar() {
               className="ml-1 inline invert"
             />
           </button>
-        )}
+        )} */}
       </div>
     </div>
   );

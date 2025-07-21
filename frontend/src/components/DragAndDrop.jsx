@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useMutation, useQueryClient } from "react-query";
 import { CircularLoader2 } from "./Loader";
 import { useAppContext } from "../Context/AppContext";
 import useGithub from "../api/useGithub";
 
-const DragAndDrop = ({ setShowUpload, path }) => {
+const DragAndDrop = ({ showUpload, setShowUpload, path }) => {
   const { setScreenLdr } = useAppContext();
 
   const { postContent } = useGithub();
@@ -43,6 +43,8 @@ const DragAndDrop = ({ setShowUpload, path }) => {
     mutation.mutate({ files, uploadPath });
     setScreenLdr(true);
   };
+
+  if (!showUpload) return null;
 
   return (
     <div className="my-3 flex">

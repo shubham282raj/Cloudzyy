@@ -122,7 +122,13 @@ export default function Browse() {
           </button>
         </div>
       </div>
-      {showUpload && <DragAndDrop setShowUpload={setShowUpload} path={path} />}
+
+      <DragAndDrop
+        showUpload={showUpload}
+        setShowUpload={setShowUpload}
+        path={path}
+      />
+
       <div className="my-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {data.map((value, index) =>
           String(value.name).startsWith("hiddenChunks-") ? (
